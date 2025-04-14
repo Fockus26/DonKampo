@@ -1,0 +1,778 @@
+main { position: relative; }
+
+.background-home {
+  background-image: url('../assets/fondo.jpg');
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -10;
+  opacity: .25;
+}
+
+/* Estilo para el modal */
+
+.ant-modal-body img {
+  width: 100% ;
+}
+.modal-text {
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.modal-body-highlight {
+  font-weight: bold;
+  color: #00983a; /* Color verde de la marca */
+}
+
+.user-type-selection {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.user-type-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Espacio horizontal entre botones */
+  flex-wrap: wrap; /* Ajusta los botones en líneas si es necesario */
+}
+
+.user-type-button {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+  border: 2px solid #00983a;
+}
+
+:where(.css-dev-only-do-not-override-49qm).ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):hover, :where(.css-dev-only-do-not-override-49qm).ant-btn-variant-dashed:not(:disabled):not(.ant-btn-disabled):hover {
+  color: #ff914d;
+  border-color: #ff914d;
+  background: #ffffff;
+}
+
+.user-type-button:active {
+  background-color: #ff914d;
+  color: #ffffff;
+  border-color: #ff914d;
+}
+
+.user-type-button:hover {
+  background-color: #00983a;
+  color: #ffffff;
+  border-color: #00983a;
+}
+.custom-search-bar {
+  width: 600px !important; /* Ancho forzado solo para este AutoComplete */
+}
+
+.custom-search-bar .ant-input {
+  height: 40px; /* Ajustar la altura si es necesario */
+  font-size: 16px; /* Aumentar el tamaño de la fuente si lo deseas */
+}
+
+
+.modal-ok-button {
+  background-color: #00983a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-ok-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.modal-ok-button:hover:enabled {
+  background-color: #00792e; /* Un verde más oscuro cuando está habilitado */
+}
+
+
+.carousel-item {
+    position: relative;
+    width: 100%;
+    height: 450px;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+}
+
+.carousel-overlay {
+    position: absolute;
+    bottom: 10%;
+    left: 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background-color: rgba(45, 131, 57, 0.5); /* Fondo oscuro con transparencia */
+    padding: 20px 30px;
+    border-radius: 12px;
+    width: 80%; /* Ocupa casi todo el ancho del carrusel */
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.carousel-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff914d; /* Color destacado del título */
+    margin: 0;
+    line-height: 1.2;
+    color: #ffffff;
+}
+
+.carousel-description {
+    font-size: 1.1rem;
+    color: #fff;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.carousel-button {
+    background-color: #ff914d;
+    border-color: #ff914d;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    max-width: 30%;
+}
+
+.carousel-button:hover {
+    background-color: #00983a;
+    border-color: #00983a;
+    transform: scale(1.05); /* Efecto de crecimiento al pasar el mouse */
+}
+.carousel-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(205 92 56 / 62%); /* Fondo blanco con opacidad */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    font-size: 24px;
+    color: #00983a;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.carousel-control.left {
+    left: 10px;
+}
+
+.carousel-control.right {
+    right: 10px;
+}
+
+.categories-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 60px;
+  gap: 40px;
+  padding: 0 20px;
+}
+
+.categories-section .ant-typography h3 {
+    color: #00983a;
+}
+
+.categories-section ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.categories-section ul li { width: fit-content; }
+
+.categories-section ul li img { width: 200px !important; }
+
+.categories-section ul li div {
+  color: var(--color-secondary) !important;
+  font-weight: 700 !important;
+}
+
+.category-card {
+    text-align: center;
+    background-color: rgba(65, 94, 78, 0.178);
+}
+
+.category-card img {
+    height: 150px;
+    object-fit: cover;
+}
+
+/* Tablet and beloew */
+@media only screen and (max-width: 61.188rem) {
+  .categories-section ul {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 60px;
+  }
+}
+
+/* Mobile and below */
+@media only screen and (max-width: 767px) {
+  .categories-section ul { 
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .categories-section ul li img {
+    height: 120px;
+    width: 300px !important;
+  }
+
+  .categories-section ul li .ant-card-body {
+    padding: 20px 0;
+  }
+}
+
+.info-section {
+    position: relative;
+    display: grid;
+    gap: 50px;
+    width: 55%;
+    padding: 50px;
+    margin: 100px auto;
+    border-radius: 8px;
+    color: white;
+    z-index: 10;
+    overflow: hidden;
+}
+
+/* Tablet and below */
+@media only screen and (max-width: 61.188rem) {
+  .info-section {
+    width: 75%;
+    border-radius: 0;
+    padding: 40px 20px;
+  }
+}
+
+.info-section div { 
+  position: absolute;
+  background-image: url('/images/6.jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  filter: blur(2px); /* Aplica el efecto difuminado */
+  color: rgba(0, 0, 0, .1);
+}
+
+.info-section div::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2); /* Capa negra más opaca */
+  z-index: 1;
+}
+
+.info-section div:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.info-section h3, .info-section p, .info-section button { z-index: 10; }
+
+.info-section h3 { 
+  font-size: 32px; 
+  color: white;
+}
+
+.info-section p {
+  font-weight: 600;
+  font-size: 18px;
+  width: 80%;
+}
+
+.info-section button {
+  font-weight: 700;
+  width: 100%;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: var(--color-secondary);
+}
+.info-section button:hover {
+  background-color: #ff914d;
+  border-color: #ff914d;
+}
+
+.ant-drawer-content {
+  background-image: url(../../assets/fruits.jpg) !important;
+}
+
+/* Mobile and below */
+@media only screen and (max-width: 767px) {
+ .ant-modal {
+  max-width: 500px !important;
+  min-width: 200px !important;
+  width: 90% !important;
+ }
+ .ant-select{
+  width: 90% !important;
+}
+}
+
+.ant-modal-title {
+    font-size: 1.8rem;
+    color: #00983a;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ant-modal-body {
+    text-align: center;
+    padding: 20px 40px;
+}
+
+.modal-text {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.modal-ok-button {
+    background-color: #00983a;
+    border-color: #00983a;
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.modal-ok-button:hover {
+    background-color: #ff914d;
+    border-color: #ff914d;
+}
+
+.modal-body-highlight {
+    font-weight: bold;
+    color: #00983a;
+}
+.carousel-logo {
+    width: 300px;
+    height: auto;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+.ant-card-meta-title{
+    color: #00983a;
+}
+:where(.css-dev-only-do-not-override-1htoz2s).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #00983a;
+  text-shadow: 0 0 0.25px currentcolor;
+}
+
+/* Pantallas pequeñas (teléfonos) */
+@media (max-width: 768px) {
+    .carousel-item {
+      height: 300px; /* Reducimos el tamaño del carrusel */
+    }
+  
+    .carousel-image {
+      height: 300px; /* Ajustamos la altura de la imagen */
+      object-fit: cover; /* Para mantener el contenido visible */
+    }
+  
+    .carousel-overlay {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px 20px;
+        width: 77%;
+        height: 64%;
+        gap: 15px;
+        bottom: 5%;
+        left: 5%;
+        margin-bottom: 5%;
+    }
+  
+    .carousel-left {
+      text-align: center; /* Centramos el texto */
+      flex: none; /* Dejamos que tome el espacio necesario */
+    }
+  
+    .carousel-title {
+      font-size: 1.5rem; /* Reducimos el tamaño del título */
+    }
+  
+    .carousel-description {
+      font-size: 1rem; /* Reducimos el tamaño de la descripción */
+    }
+  
+    .carousel-button {
+      font-size: 0.9rem; /* Botón más pequeño */
+      padding: 8px 15px; /* Menos padding */
+      max-width: 100%; /* Ocupa todo el ancho posible */
+    }
+  
+    .carousel-right {
+      width: 60%; /* Logo más pequeño */
+      padding: 10px; /* Reducimos el padding */
+    }
+  
+    .carousel-logo {
+      width: 80px; /* Tamaño del logo reducido */
+    }
+  }
+  
+  /* Pantallas medianas (tabletas) */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .carousel-item {
+      height: 400px;
+    }
+  
+    .carousel-image {
+      height: 400px;
+    }
+  
+    .carousel-overlay {
+      width: 85%; /* Ancho un poco más amplio */
+      bottom: 7%;
+      left: 7%;
+      padding: 20px;
+      gap: 20px;
+    }
+  
+    .carousel-title {
+      font-size: 1.7rem;
+    }
+  
+    .carousel-description {
+      font-size: 1.1rem;
+    }
+  
+    .carousel-button {
+      font-size: 1rem;
+      padding: 10px 20px;
+    }
+  
+    .carousel-logo {
+      width: 120px;
+    }
+  }
+  
+  /* Pantallas grandes (escritorio) */
+  @media (min-width: 1025px) {
+    .carousel-item {
+      height: 450px;
+    }
+  
+    .carousel-image {
+      height: 450px;
+    }
+  
+    .carousel-overlay {
+      width: 80%;
+      bottom: 10%;
+      left: 8%;
+      padding: 30px;
+      gap: 30px;
+    }
+  
+    .carousel-title {
+      font-size: 2rem;
+    }
+  
+    .carousel-description {
+      font-size: 1.2rem;
+    }
+  
+    .carousel-button {
+      font-size: 1.1rem;
+      padding: 12px 25px;
+    }
+  
+    .carousel-logo {
+      width: 224px;
+    }
+  }
+  
+  :where(.css-dev-only-do-not-override-49qm).ant-card .ant-card-meta-title {
+    color: #00983a ;
+
+    font-size: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+/* Estilos generales para la barra de búsqueda */
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  max-width: 800px;
+  padding: 30px 0;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.search-result-item.promo {
+  
+}
+
+.search-result-item div { 
+  display: flex;
+  align-items: center;
+ }
+
+.search-result-item .range {
+  color:#ff914d;
+}
+
+/* Estilo para el input */
+.search-input {
+  width: 50%;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #00983a;
+  border-radius: 4px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #ff914d;
+  box-shadow: 0 0 4px #ff914d;
+}
+
+/* Estilo para el botón */
+.search-button {
+  background-color: #00983a;
+  border-color: #00983a;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #ff914d;
+  border-color: #ff914d;
+}
+/* Estilos para la nueva sección de "Delivery" */
+.delivery-section {
+  padding-top: 45px;
+  text-align: center;
+}
+
+.delivery-section p {
+  color: var(--color-secondary);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.delivery-section img {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Ajuste para las tarjetas de entrega */
+.category-card {
+  background-color: rgba(65, 94, 78, 0.178);
+  margin-bottom: 16px; /* Espacio entre las tarjetas */
+}
+
+/* Imagen dentro de las tarjetas */
+.category-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover; /* Asegura que la imagen cubra el espacio sin distorsionarse */
+}
+
+
+/* Responsividad para dispositivos móviles */
+@media (max-width: 768px) {
+  .delivery-section {
+    padding: 10px; /* Reduce el padding en pantallas pequeñas */
+  }
+
+  .delivery-card {
+    padding: 10px; /* Asegura que el contenido dentro de las cards tenga espacio en móviles */
+  }
+
+  .delivery-section .ant-typography {
+    font-size: 1.2rem; /* Ajusta el tamaño del título */
+  }
+
+  /* Asegura que las imágenes no sobrepasen el ancho de la pantalla */
+  .delivery-image {
+    width: 100%; /* Ajuste de imagen para móviles */
+    max-height: 200px; /* Limita la altura de la imagen para pantallas pequeñas */
+  }
+}
+
+/* Responsividad para tabletas */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .delivery-section {
+    padding: 15px;
+  }
+
+  .delivery-card {
+    padding: 15px; /* Aumenta el padding de las cards en tablets */
+  }
+
+  .delivery-section .ant-typography {
+    font-size: 1.4rem; /* Ajusta el tamaño del título */
+  }
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+  .category-card {
+    max-width: 100%; /* Las tarjetas ocupan el 100% del ancho en dispositivos pequeños */
+    margin: 0 auto; /* Centra la tarjeta */
+  }
+
+  .category-image {
+    height: 120px; /* Reduce la altura de la imagen en pantallas pequeñas */
+  }
+}
+
+/* Responsividad para pantallas medianas (tabletas) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .category-card {
+    max-width: 250px; /* Limita el ancho de las tarjetas en pantallas medianas */
+    margin: 0 auto; /* Centra la tarjeta */
+  }
+
+  .category-image {
+    height: 150px; /* Ajusta la altura de la imagen */
+  }
+}
+
+/* Responsividad para pantallas grandes (escritorio) */
+@media (min-width: 1025px) {
+  .category-card {
+    max-width: 250px;
+    margin: 0 auto;
+  }
+
+  .category-image {
+    height: 150px; /* Tamaño de imagen constante */
+  }
+}
+
+
+/* Aseguramos un buen espacio entre las tarjetas */
+@media (min-width: 768px) {
+  .delivery-card {
+    max-width: 250px; /* Limita el ancho de cada tarjeta */
+    margin: 0 auto; /* Centra la tarjeta */
+  }
+}
+
+
+/* Responsividad para pantallas pequeñas (teléfonos) */
+@media (max-width: 768px) {
+  .search-bar {
+    flex-direction: column; /* Cambia la dirección a columna */
+    gap: 5px; /* Menor espacio entre elementos */
+    padding: 10px 5px; /* Ajusta el padding */
+  }
+
+  .search-input {
+    width: 90%; /* Input más ancho */
+    font-size: 14px; /* Fuente más pequeña */
+    margin-bottom: 0%;
+  }
+
+  .search-button {
+    width: 90%; /* Botón ocupa todo el ancho del input */
+    font-size: 14px; /* Fuente más pequeña */
+    padding: 8px; /* Menor padding */
+  }
+}
+
+/* Responsividad para pantallas medianas (tabletas) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .search-bar {
+    gap: 8px; /* Ajusta el espacio entre elementos */
+    
+  }
+
+  .search-input {
+    width: 70%; /* Input más ancho */
+    font-size: 15px; /* Ajusta el tamaño de fuente */
+    margin-bottom: 0%;
+    
+  }
+
+  .search-button {
+    font-size: 15px; /* Ajusta el tamaño de fuente */
+    padding: 9px 18px; /* Ajusta el padding */
+  }
+}
+
+/* Responsividad para pantallas grandes (escritorio) */
+@media (min-width: 1025px) {
+  .search-bar {
+    gap: 12px; /* Espacio mayor entre elementos */
+  }
+
+  .search-input {
+    width: 50%; /* Input de tamaño normal */
+    font-size: 16px; /* Tamaño de fuente estándar */
+    margin-bottom: 0%;
+  }
+
+  .search-button {
+    font-size: 16px; /* Tamaño de fuente estándar */
+    padding: 10px 20px; /* Padding estándar */
+  }
+}

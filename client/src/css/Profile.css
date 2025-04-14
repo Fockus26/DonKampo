@@ -1,0 +1,162 @@
+/* Contenedor principal */
+.user-profile-container {
+  max-width: 1000px; /* Ancho máximo del contenido */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Bienvenida */
+.welcome-section {
+  text-align: center;
+}
+
+.welcome-section h2 {
+  margin-bottom: 20px;
+}
+
+.profile-button,
+.orders-button {
+  margin: 10px;
+}
+
+/* Tarjetas de perfil y pedidos */
+.user-profile-card,
+.user-orders-card {
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-radius: 8px;
+  padding: 20px;
+}
+
+/* Tabla de pedidos */
+.orders-table .ant-table-row:hover {
+  background-color: #FF914D; /* Color de la marca */
+  cursor: pointer;
+}
+
+.user-profile-card .ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* Botones */
+.save-button {
+  margin-top: 20px;
+  background-color: #00983a;
+  border-color: #00983a;
+  color: #fff;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #ee7723;
+  border-color: #ee7723;
+}
+
+.back-button {
+  margin-top: 20px;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Elementos del modal */
+.modal-content-horizontal {
+  display: flex;
+  flex-wrap: wrap; /* Permitir ajuste en pantallas pequeñas */
+  gap: 20px;
+  padding: 20px;
+}
+
+.modal-section-horizontal {
+  flex: 1 1 50%; /* Cada sección ocupa 50% del ancho */
+}
+
+.modal-product-list-horizontal {
+  display: flex;
+  flex-wrap: wrap; /* Ajustar productos en filas */
+  gap: 15px;
+  width: 100%;
+}
+
+.modal-product-item-horizontal {
+  flex: 1 1 calc(50% - 15px); /* Dos columnas de productos */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-product-item-horizontal:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra al pasar el cursor */
+}
+
+.modal-product-item-horizontal p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.modal-total-horizontal {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* Información de envío */
+.modal-shipping-info-horizontal {
+  flex: 1 1 100%; /* Ocupa toda la fila */
+  border-top: 2px solid #ddd;
+  padding-top: 15px;
+}
+
+.modal-shipping-info-horizontal p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+/* Botón de enlace personalizado */
+.link-button {
+  color: #00983a; /* Color principal */
+  font-weight: bold; /* Resaltar texto */
+  border: none; /* Sin bordes */
+  background: none; /* Sin fondo */
+  padding: 0; /* Sin padding */
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.link-button-2 {
+  color: #ee7723; /* Color principal */
+  font-weight: bold; /* Resaltar texto */
+  border: none; /* Sin bordes */
+  background: none; /* Sin fondo */
+  padding: 0; /* Sin padding */
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.link-button:hover {
+  color: #ee7723; /* Color de hover */
+  text-decoration: underline; /* Subrayado al pasar el mouse */
+}
+
+.link-button:focus {
+  outline: none; /* Elimina el contorno al enfocarse */
+}
+
+
+/* Diseño responsive */
+@media (max-width: 768px) {
+  .modal-section-horizontal {
+    flex: 1 1 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+  }
+
+  .modal-product-item-horizontal {
+    flex: 1 1 100%; /* Una sola columna en pantallas pequeñas */
+  }
+}

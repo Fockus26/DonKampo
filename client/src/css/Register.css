@@ -1,0 +1,228 @@
+/* General */
+.register-container {
+  max-width: 800px;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.293);
+  margin: 2% auto 4%;
+}
+
+.register-container h2 {
+  text-align: center;
+  color: #00983A; /* Color principal de la marca */
+  margin-bottom: 1.5rem;
+}
+
+/* Estilos para las filas */
+.form-row {
+  display: flex;
+  gap: 1.5rem; /* Espacio entre columnas */
+  margin-bottom: 1rem;
+}
+
+.form-row > .ant-form-item {
+  flex: 1; /* Ambos campos ocupan la misma cantidad de espacio */
+  margin: 0; /* Elimina márgenes extra */
+}
+
+.register-container .ant-input,
+.register-container .ant-input-password,
+.register-container .ant-select-selector {
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%; /* Ajusta el ancho al 100% del contenedor */
+  box-sizing: border-box; /* Asegura que el padding no desborde */
+}
+
+.register-container .ant-btn-primary {
+  background-color: #00983A; /* Color principal */
+  border-color: #00983A;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  padding: 10px 15px;
+  width: 100%; /* Botón ocupa todo el ancho */
+}
+
+.register-container .ant-btn-primary:hover {
+  background-color: #00772C; /* Color secundario */
+  border-color: #00772C;
+}
+
+/* Responsividad */
+
+/* Escritorio grande (mayor a 1200px) */
+@media (min-width: 1200px) {
+  .register-container {
+    max-width: 900px;
+  }
+
+  .form-row {
+    gap: 2rem; /* Más espacio entre columnas */
+  }
+
+  .register-container h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Escritorio mediano (entre 1024px y 1200px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .register-container {
+    max-width: 800px;
+  }
+
+  .form-row {
+    gap: 1.5rem;
+  }
+
+  .register-container h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Tabletas (entre 768px y 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .register-container {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    flex-direction: column; /* Campos apilados verticalmente */
+    gap: 1rem; /* Espacio reducido entre filas */
+  }
+
+  .register-container h2 {
+    font-size: 1.6rem;
+  }
+
+  .register-container .ant-btn-primary {
+    padding: 12px 20px;
+  }
+}
+
+/* Móviles grandes (entre 576px y 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .register-container {
+    max-width: 90%;
+    padding: 1rem;
+  }
+
+  .form-row {
+    flex-direction: column; /* Campos apilados verticalmente */
+    gap: 1rem;
+  }
+
+  .register-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .register-container .ant-btn-primary {
+    padding: 10px 15px;
+  }
+}
+
+/* Móviles pequeños (menor a 576px) */
+@media (max-width: 575px) {
+  .register-container {
+    max-width: 100%;
+    padding: 1rem;
+    margin: 5% auto;
+    box-shadow: none; /* Elimina la sombra para un diseño más limpio */
+  }
+
+  .form-row {
+    flex-direction: column; /* Campos apilados verticalmente */
+    gap: 1rem;
+  }
+
+  .register-container h2 {
+    font-size: 1.4rem;
+  }
+
+  .register-container .ant-btn-primary {
+    padding: 8px 12px;
+    font-size: 1rem;
+  }
+}
+
+.chooseUserType .ant-modal-content {
+  padding: 40px;
+  border-radius: 12px;
+}
+
+.chooseUserType .ant-modal-title {
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.chooseUserType .categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  padding: 10px;
+}
+
+.chooseUserType .category {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: #00983a;
+  border: 2px solid #00983a;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.chooseUserType .category:hover {
+  background-color: #00983a;
+  color: white;
+<<<<<<< HEAD
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 152, 58, 0.3);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .chooseUserType .categories {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .chooseUserType .category {
+    font-size: 18px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chooseUserType .categories {
+    grid-template-columns: 1fr;
+  }
+
+  .chooseUserType .category {
+    font-size: 16px;
+    padding: 10px;
+  }
+}
+
+=======
+}
+
+/* Tablet and below */
+@media only screen and (max-width: 61.188rem) {
+  .chooseUserType .ant-modal-content { padding: 40px 20px; }
+  .chooseUserType .ant-modal-title { font-size: 28px; }
+  .chooseUserType .categories { grid-template-columns: 1fr; }
+}
+>>>>>>> ba29b7075bbf33a6d68200a7de373c437f9d12f2

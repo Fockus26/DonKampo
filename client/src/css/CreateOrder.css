@@ -1,0 +1,144 @@
+/* Estilos para centrar y organizar los elementos horizontalmente en CreateOrder */
+
+.create-order-container {
+  max-width: 1400px;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.337);
+  margin-top: 2%;
+  margin-bottom: 8%;
+  }
+  
+  .product-selection, .selected-products { margin-bottom: 20px; }
+  
+  .products-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  
+  .product-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    width: 200px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .quantity-text {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .selected-products {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+  }
+  
+  .selected-product-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .selected-product-item p {
+    margin: 0;
+  }
+  
+
+  
+  .ant-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Para pantallas pequeñas (smartphones y tablets, hasta 768px) */
+@media (max-width: 768px) {
+  .create-order-container {
+    padding: 1rem;
+    margin: 5% auto;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .products-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-item {
+    width: 90%; /* Ajustar el ancho para pantallas pequeñas */
+    margin-bottom: 10px;
+  }
+
+  .quantity-controls {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .selected-product-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .selected-product-item p {
+    margin-bottom: 5px;
+  }
+}
+
+/* Para pantallas medianas (tablets y laptops pequeños, entre 768px y 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .create-order-container {
+    padding: 1.5rem;
+    margin: 3% auto;
+    width: 90%;
+  }
+
+  .products-list {
+    gap: 12px;
+  }
+
+  .product-item {
+    width: 180px;
+  }
+
+  .selected-product-item {
+    padding: 8px 0;
+  }
+}
+
+/* Para pantallas grandes (monitores de hasta 1920px) */
+@media (min-width: 1400px) {
+  .create-order-container {
+    max-width: 1600px;
+    padding: 3rem;
+  }
+
+  .products-list {
+    gap: 20px;
+  }
+
+  .product-item {
+    width: 250px;
+  }
+
+  .quantity-controls {
+    gap: 15px;
+  }
+}

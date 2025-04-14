@@ -1,0 +1,240 @@
+/* Variables de colores para un diseño coherente */
+
+
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Contenedor principal del formulario */
+.manage-products-container, .create-product {
+  display: grid;
+  gap: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 10px;
+  background-color: var(--color-bg-card);
+  box-shadow: 0 4px 10px var(--color-shadow);
+}
+
+/* Estilo para el título */
+h2, h3, h4 {
+  color: var(--color-primary);
+  font-weight: bold;
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 22px;
+}
+
+h4 {
+  font-size: 18px;
+  color: var(--color-secondary);
+}
+
+/* Estilo de las secciones */
+.create-product .main-data, .create-product .variation-data {
+  display: grid;
+}
+
+/* Entradas y campos del formulario */
+.create-product input,
+.create-product select,
+.create-product textarea,
+.create-product button {
+  width: 100%;
+  padding: 5px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.create-product input:focus,
+.create-product select:focus,
+.create-product textarea:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+/* Botones */
+.create-product button {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  padding: 10px;	
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.create-product button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Estilo para botones de variación */
+.variation-fields button {
+  background-color: transparent;
+  border: 1px solid var(--color-secondary);
+  color: var(--color-secondary);
+  padding: 10px;	
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.variation-fields button:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+/* Estilos de imagen */
+.create-product .upload-preview {
+  margin-top: 10px;
+  display: flex;
+  justify-content:flex-start;
+  align-items: center;
+}
+
+.create-product .upload-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+
+/* Contenedor de las variaciones */
+.create-product .variation-fields {
+  background-color: var(--color-bg-card);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--color-shadow);
+}
+
+.create-product .variation-fields .ant-row {
+  margin-bottom: 16px;
+}
+
+.create-product .variation-fields h4 {
+  margin-bottom: 10px;
+}
+
+/* Estilo para la eliminación de variaciones */
+.create-product .variation-fields button[type="danger"] {
+  background-color: var(--color-error);
+  color: var(--color-white);
+  border: none;
+}
+
+.create-product .variation-fields button[type="danger"]:hover {
+  background-color: var(--color-error-hover);
+}
+
+/* Diseño adaptable para dispositivos */
+@media (max-width: 768px) {
+  .manage-products-container, .create-product {
+    padding: 20px;
+  }
+
+  .create-product .main-data > div,
+  .create-product .variation-data {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .create-product button,
+  .variation-fields button {
+    font-size: 14px;
+  }
+
+  .create-product .variation-fields input {
+    font-size: 14px;
+  }
+
+  .create-product .variation-fields button {
+    margin-bottom: 10px;
+  }
+}
+
+/* Diseño para dispositivos móviles */
+@media (max-width: 480px) {
+  .create-product .main-data, .create-product .variation-data {
+    padding: 10px;
+  }
+
+  .create-product button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .create-product .variation-fields input {
+    font-size: 14px;
+  }
+}
+
+/* Indicadores de carga */
+.isLoading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.isLoading div {
+  background-color: var(--color-white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px var(--color-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.isLoading div button {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+}
+
+.isLoading div button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.create-product input, .create-product select, .create-product textarea, .create-product button{
+  width: 100%;
+  padding: 5px;
+  border-radius: 8px;
+  border: 1px solid #c9c5c5;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  padding-top: 5px;
+}
+.create-product button{
+  color:#ffffff;
+}
+.manage-search button{
+  background-color: var(--color-primary-hover);
+  color: #ffffff;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+  border-radius: 8px;
+  border: none;
+}
+
+.ant-select.tag {
+  width: 100% !important;
+}

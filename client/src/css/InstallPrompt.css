@@ -1,0 +1,158 @@
+/* Modal Overlay */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Fondo más oscuro para destacar el modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px); /* Efecto difuminado */
+}
+
+/* Modal Content */
+.modal-content {
+  background: #ffffff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+  animation: fadeIn 0.5s ease; /* Animación de aparición */
+  flex-direction: column;
+}
+.modal-content button:last-child{
+  background-color: #e0e0e0;
+  color: #333;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.modal-content button:last-child:hover{
+  background-color: #e0e0e0;
+  color: #333;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Título */
+.modal-content .close {
+  position: absolute;
+  right: 20px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.modal-content h2 {
+  color: var(--color-secondary);
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+/* Descripción */
+.modal-content p {
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+/* Iconos */
+.modal-content ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.modal-content ul li {
+  list-style: none;
+  font-size: 40px;
+  color: var(--color-primary-hover);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.modal-content ul li:hover {
+  transform: scale(1.2);
+  color: var(--color-secondary-hover);
+}
+
+/* Botones de Acciones */
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modal-actions button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white !important;
+}
+/* Botón Cancelar */
+.modal-actions button:first-child {
+  background-color: #e74c3c;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.modal-actions button:first-child:hover {
+  background-color: #c33b2e;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Botón Instalar */
+.modal-actions button:last-child {
+  background-color: var(--color-primary) !important;
+}
+
+.modal-actions button:last-child:hover {
+  background-color: var(--color-primary-hover) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Animación de Aparición */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 20px 15px;
+  }
+
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .modal-content p {
+    font-size: 0.9rem;
+  }
+
+  .modal-actions button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .modal-content ul li {
+    font-size: 30px;
+  }
+}

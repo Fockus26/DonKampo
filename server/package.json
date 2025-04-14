@@ -1,0 +1,52 @@
+{
+  "name": "api-donkampo",
+  "version": "1.0.0",
+  "description": "API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --exec npx babel-node src/",
+    "build": "npm install && babel src -d dist",
+    "start": "node dist",
+    "migration": "node src/migration/migrate.js"
+  },
+  "author": "Cre8tive Agency",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/cdk": "^17.3.10",
+    "@angular/material": "^17.3.10",
+    "@aws-sdk/client-s3": "^3.693.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-fileupload": "^1.5.1",
+    "express-validator": "^7.2.0",
+    "force": "^0.0.3",
+    "g": "^2.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nanoid": "^5.0.8",
+    "nodemailer": "^6.9.16",
+    "pg": "^8.12.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.26.4",
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/node": "^7.26.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@babel/plugin-syntax-optional-chaining": "^7.8.3",
+    "@babel/plugin-transform-async-to-generator": "^7.15.4",
+    "@babel/plugin-transform-runtime": "^7.25.9",
+    "@babel/preset-env": "^7.26.7",
+    "babel-cli": "^6.26.0",
+    "nodemon": "^3.1.4"
+  }
+}

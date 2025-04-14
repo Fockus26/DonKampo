@@ -1,0 +1,207 @@
+/* .filters-container para la barra de filtros */
+article {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background-color: #0fb83970;
+    border-radius: 8px;
+    margin: 10px auto;
+    max-width: 1078px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 5%;
+}
+
+/* .products-container para el contenedor de productos */
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px;
+    max-width: 1117px;
+    margin: 0 auto;
+    margin-top: -5%;
+}
+
+/* Tablet and below */
+@media only screen and (max-width: 61.188rem) {
+  .products-container { padding: 10px 20px; }
+
+  .products-container .ant-card { width: 100%; }
+}
+
+/* Estilos de las tarjetas de productos */
+.product-card p {
+    color: #00983A;
+    margin-top: 4%;
+}
+
+.product-card.promo {
+    position: relative; /* Necesario para que el ::before se posicione correctamente */
+}
+
+.product-card.promo::before {
+    content: "PROMO";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #eb0014; /* Verde */
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 46%;
+    margin-bottom: 2%;
+}
+
+.product-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    padding: 5px;
+    text-align: center;
+    width: 272px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+}
+
+/* Efecto hover para las tarjetas de productos */
+.product-card:hover {
+    transform: scale(1.02);
+}
+
+.product-card .ant-card-cover img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 8px 8px 0 0;
+}
+
+.product-info {
+    padding: 6px 0;
+    text-align: center;
+}
+
+.product-category {
+    font-size: 9px;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.product-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: #FF914D;
+    margin-bottom: 6px;
+}
+
+.product-price {
+    font-size: 11px;
+    font-weight: bold;
+    color: #00983A;
+    margin: 4px 0;
+}
+
+.add-to-cart-button {
+    background-color: #00983A;
+    border-color: #00983A;
+    font-size: 10px;
+    border-radius: 4px;
+    padding: 2px 37px;
+    margin-top: 12%;
+    color: #fff;
+    width: 100%;
+}
+
+.add-to-cart-button:hover {
+    background-color: #EE7723;
+    border-color: #EE7723;
+}
+
+/* .quantity-controls para el control de cantidad */
+.quantity-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* Espacio entre los botones */
+    margin-top: 8px; /* Margen superior */
+}
+
+/* Estilo de los botones de cantidad */
+.quantity-button {
+    background-color: #00983A;
+    border: none;
+    color: #fff;
+    font-size: 14px; /* Tamaño adecuado */
+    padding: 0 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 30px; /* Tamaño fijo para los botones */
+    min-width: 30px;
+}
+.ant-select{
+    width: 300px;
+}
+
+/* Hover para los botones */
+.quantity-button:hover {
+    background-color: #EE7723;
+}
+
+/* Texto de la cantidad */
+.quantity-text {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+}
+.ant-modal-title {
+    color: #00983A  !important;
+    font-weight: bold;
+}
+.green-text {
+    color: #00983A;
+    font-weight: bold;
+  }
+
+@media (max-width: 768px) {
+    .pagination {
+        text-align: center;
+        margin-left: 36%; 
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+
+    .quantity-controls {
+        flex-direction: row !important; 
+        gap: 10px; 
+    }
+
+    .quantity-button {
+        font-size: 14px;
+        padding: 0 12px; 
+        height: 35px;
+    }
+
+    .quantity-text {
+        font-size: 14px; 
+    }
+}
+
+.noAvailable {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5%;
+    font-weight: 700;
+    font-size: 28px;
+}

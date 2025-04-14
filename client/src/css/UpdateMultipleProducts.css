@@ -1,0 +1,121 @@
+/* Contenedor principal */
+.update-multiple-products {
+   
+    background-color: var(--color-bg-card);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--color-shadow);
+  }
+  
+  /* Botón de subida de archivo */
+  .update-multiple-products .excel {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .update-multiple-products .excel:hover {
+    background-color: #0ab927;
+  }
+  
+  /* Indicador de carga */
+  .update-multiple-products .isLoading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(194, 123, 16, 0.295);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  /* Contenido dentro del indicador de carga */
+  .update-multiple-products .isLoading > div {
+    background-color: var(--color-white);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--color-shadow);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  /* Estilos para los mensajes */
+  .update-multiple-products .isLoading .success,
+  .update-multiple-products .isLoading .error,
+  .update-multiple-products .isLoading .info {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: var(--color-white);
+  }
+  
+  /* Colores según el estado */
+  .update-multiple-products .isLoading .success {
+    background-color: var(--color-success);
+  }
+  
+  .update-multiple-products .isLoading .error {
+    background-color: var(--color-error);
+  }
+  
+  .update-multiple-products .isLoading .info {
+    background-color: var(--color-secondary);
+  }
+  
+  /* Íconos */
+  .update-multiple-products .isLoading i {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  /* Botón dentro del modal */
+  .update-multiple-products .isLoading button {
+    background-color: #ffffff;
+    color: var(--color-white);
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .update-multiple-products .isLoading button:hover {
+    background-color: var(--color-primary);
+  }
+  
+  /* Animación de carga */
+  .update-multiple-products .isLoading .spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Animación de spinner */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Adaptabilidad para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .update-multiple-products {
+      padding: 15px;
+    }
+  
+    .update-multiple-products .isLoading > div {
+      width: 95%;
+      max-width: 300px;
+    }
+  }
+  

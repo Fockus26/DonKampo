@@ -1,0 +1,7 @@
+# Activa las redirecciones
+RewriteEngine On
+
+# Redirige todas las rutas que no sean archivos o carpetas a index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

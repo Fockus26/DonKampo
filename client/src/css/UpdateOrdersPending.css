@@ -1,0 +1,67 @@
+.update-order-prices-container {
+    padding: 32px;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+  }
+  
+  .update-order-prices-container h2 {
+    font-size: 24px;
+    color: #333333;
+    margin-bottom: 16px;
+  }
+  
+  .update-order-prices-container p {
+    font-size: 16px;
+    color: #666666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  
+  .update-order-prices-button {
+    background-color: #4caf50;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .update-order-prices-button:hover {
+    background-color: #45a049;
+    box-shadow: 0px 8px 16px rgba(76, 175, 80, 0.3);
+  }
+  
+  .update-order-prices-button:disabled {
+    background-color: #c8e6c9;
+    cursor: not-allowed;
+  }
+  
+  .update-order-prices-button .ant-spin {
+    margin-right: 8px;
+  }
+  
+  .update-order-prices-notification {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+  }
+  
+  .update-order-prices-footer {
+    font-size: 14px;
+    color: #999999;
+    margin-top: 16px;
+  }
+  
