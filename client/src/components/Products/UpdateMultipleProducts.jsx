@@ -58,7 +58,7 @@ const UpdateMultipleProducts = () => {
         await sleep(1000);
 
         // Para actualizar, solo nos interesa aquellos productos que existan en la BD
-        const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/products", { withCredentials: true });
+        const response = await axios.get("http://localhost:8080/api/products", { withCredentials: true });
         const dbProducts = response.data;
         const totalExcelProducts = excelProducts.filter((excelProduct) =>
           dbProducts.some((p) => p.product_id === excelProduct.product_id)
@@ -159,7 +159,7 @@ const UpdateMultipleProducts = () => {
     event.preventDefault();
     setProcessExcel({ message: "Actualizando productos", status: "" });
     axios
-      .put("https://don-kampo-api-5vf3.onrender.com/api/updatemultipleproducts", updateProducts, {
+      .put("http://localhost:8080/api/updatemultipleproducts", updateProducts, {
         headers: { "Content-Type": "application/json" },
       })
       .then((response) => {

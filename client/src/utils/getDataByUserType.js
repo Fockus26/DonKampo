@@ -7,11 +7,11 @@ const getPrice = presentation => {
     } else return null
 };
 
-const getShippingCost = shippingData => {        
+const getShippingCost = (shippingData, user_type = userType) => {        
     const formattedUserType = 
-        userType === 'home' ? 'Hogar'
-        : userType === 'supermarket' ? 'Supermercado'
-        : userType === 'restaurant' ? 'Restaurante'
+        user_type === 'home' ? 'Hogar'
+        : user_type === 'supermarket' ? 'Supermercado'
+        : user_type === 'restaurant' ? 'Restaurante'
         : 'Fruver'
  
     if (formattedUserType === 'Hogar') return 3 / 100

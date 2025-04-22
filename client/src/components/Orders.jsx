@@ -28,7 +28,7 @@ const Orders = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/orders");
+            const response = await axios.get("http://localhost:8080/api/orders");
 
             // Procesar datos de órdenes
             const dataOrders = response.data.map(item => {
@@ -88,7 +88,7 @@ const Orders = () => {
         setIsModalVisible(true);
 
         try {
-            const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${order.id}`);
+            const response = await axios.get(`http://localhost:8080/api/orders/${order.id}`);
             setOrderDetails(response.data); // Almacenar los detalles de la orden
         } catch (error) {
             message.error("Error al cargar los detalles de la orden.");
@@ -183,7 +183,7 @@ const Orders = () => {
             const responses = await Promise.all(
                 filteredOrders.map(async (order) => {
                     try {
-                        const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${order.id}`);
+                        const response = await axios.get(`http://localhost:8080/api/orders/${order.id}`);
                         
                         const { order: orderDetails, items, userData: { city, phone, address } } = response.data;
                         // Crear filas por cada ítem y variación
@@ -264,7 +264,7 @@ const Orders = () => {
     const updateOrderStatus = async (orderId, newStatus) => {
         try {
             // Cambiamos la URL para incluir directamente el id y el nuevo estado
-            await axios.put(`https://don-kampo-api-5vf3.onrender.com/api/updatestatus/${orderId}/${newStatus}`);
+            await axios.put(`http://localhost:8080/api/updatestatus/${orderId}/${newStatus}`);
             message.success("Estado del pedido actualizado correctamente.");
             fetchOrders(); // Refresca la lista de pedidos después de actualizar el estado
         } catch (error) {
@@ -276,7 +276,7 @@ const Orders = () => {
     // Eliminar un pedido
     const deleteOrder = async (orderId) => {
         try {
-            await axios.delete(`https://don-kampo-api-5vf3.onrender.com/api/deleteorders/${orderId}`);
+            await axios.delete(`http://localhost:8080/api/deleteorders/${orderId}`);
             message.success("Pedido eliminado correctamente.");
             fetchOrders();
         } catch (error) {
@@ -288,19 +288,24 @@ const Orders = () => {
     const fetchOrderDetailsAndGeneratePDF = async (orderId) => {
         try {
             // Llamar a la API para obtener los detalles de la orden
-            const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${orderId}`);
+            const response = await axios.get(`http://localhost:8080/api/orders/${orderId}`);
             const orderData = response.data;
+            const { userData: { user_type } } = response.data
             
             let shippingCost = 0;
             let discountedShippingCost = null;
 
             // Obtener costos de envío
             const fetchedShippingCosts = await getFetch('customer-types', '');
-            shippingCost = getShippingCost(fetchedShippingCosts);
+            shippingCost = getShippingCost(fetchedShippingCosts, user_type);
 
             // Obtener datos del usuario
-            const fetchedUser = await getFetch('users', `/${orderData.order.customer_id}`);
-            if (fetchedUser.orders.length === 1) discountedShippingCost = shippingCost / 2;
+            try {
+                const fetchedUser = await getFetch('users', `/${orderData.order.customer_id}`);
+                if (fetchedUser.orders.length === 1) discountedShippingCost = shippingCost / 2;
+            } catch (error) {
+                discountedShippingCost = shippingCost
+            }
 
             const percentageShippingCost = discountedShippingCost ?? shippingCost
             const total = orderData.items.reduce((acc, item) => acc + item.price * item.quantity, 0)
@@ -545,7 +550,7 @@ const UpdateOrderPrices = () => {
       setLoading(true);
   
       try {
-        const response = await axios.put("https://don-kampo-api-5vf3.onrender.com/api/orders/updatePrices");
+        const response = await axios.put("http://localhost:8080/api/orders/updatePrices");
         notification.success({
           message: "Éxito",
           description: response.data.msg || "Los precios se han actualizado correctamente.",

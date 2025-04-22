@@ -2,7 +2,7 @@
     "rewrites": [
       {
         "source": "/api/(.*)", 
-        "destination": "https://don-kampo-api-5vf3.onrender.com/"
+        "destination": "http://localhost:8080/"
       },
       {
         "source": "/(.*)", 

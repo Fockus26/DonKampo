@@ -136,13 +136,14 @@ const Products = () => {
       const currentVariation = selectedVariations[product.product_id]
       // Para otros tipos de usuario, usar la variación seleccionada
       selectedVariation = product.variations.find(v =>  v.quality === currentVariation?.quality)
-      selectedPresentation = selectedVariation.presentations.find(p => p.presentation === currentVariation?.presentation)
       
       if (!selectedVariation) {
         message.error("Por favor selecciona una calidad y presentacion.");
         return;
       }
     }
+
+    selectedPresentation = selectedVariation.presentations.find(p => p.presentation === selectedVariations[product.product_id]?.presentation)
 
     if (!selectedVariation) {
       message.error("No se encontró una variación válida para este producto.");
@@ -205,6 +206,7 @@ const Products = () => {
     }));
   };  
 
+
   return (
     <>
       <Header />
@@ -254,8 +256,8 @@ const Products = () => {
             ) : (
               <>
                 { currentProducts.map(product => {            
-                  const firstVariation = product.variations[0];
                   const { name, category, description, product_id: id, photo_url: url, promocionar } = product
+
                   return (
                     <Card
                       key={id}
@@ -278,54 +280,6 @@ const Products = () => {
                         <h3 className="product-name">{name}</h3>
                         <p className="product-category">{category}</p>
                         <p className="product-description">{description}</p>
-                        { userType === "home" && firstVariation && currentProduct &&
-                          <div className="product-variation-info">
-                            <Select
-                              disabled={!selectedVariations[currentProduct.product_id]?.quality}
-                              placeholder="Presentacion"
-                              style={{ width: "100%", marginBottom: "8px" }}
-                              value={selectedVariations[currentProduct.product_id]?.presentation}
-                              onChange={(value) =>
-                                handleVariationChange(currentProduct.product_id, "presentation", value)
-                              }
-                            >
-                              { selectedVariations[currentProduct.product_id]?.quality &&
-                                  <Option value={ firstVariation.quality }>
-                                    { firstVariation.quality }
-                                  </Option>
-                              }
-                            </Select>
-                            <Select
-                              disabled={!selectedVariations[currentProduct.product_id]?.quality}
-                              placeholder="Presentacion"
-                              style={{ width: "100%", marginBottom: "8px" }}
-                              value={selectedVariations[currentProduct.product_id]?.presentation}
-                              onChange={(value) =>
-                                handleVariationChange(currentProduct.product_id, "presentation", value)
-                              }
-                            >
-                              { selectedVariations[currentProduct.product_id]?.quality &&
-                                firstVariation.presentations.map((presentation, index) => (
-                                  <Option key={index} value={presentation.presentation}>
-                                    {presentation.presentation}
-                                  </Option>
-                                ))
-                              }
-                            </Select>
-                            <span>
-                              Precio: $
-                              {(
-                                getPrice(
-                                  firstVariation.presentations
-                                  .find(p => p.presentation === selectedVariations[currentProduct.product_id].presentation)
-                                ) * (quantities[currentProduct.product_id] || 1)
-                              )
-                                .toFixed(2)
-                                .replace(/\.00$/, "")
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                            </span>
-                          </div>
-                        }
 
                         <Button type="primary" onClick={() => openModal(product)}>
                           { userType === 'home' ? 'Agregar al carrito' : 'Ver detalles' }
@@ -418,18 +372,7 @@ const Products = () => {
           </div>
 
           <div className="product-price" style={{ marginTop: "8px", textAlign: "center" }}>
-            { userType === "home" && currentProduct.variations[0] ? (
-              <span>
-                Precio: $
-                {(
-                  getPrice(currentProduct.variations[0]) *
-                  (quantities[currentProduct.product_id] || 1)
-                )
-                  .toFixed(2)
-                  .replace(/\.00$/, "")
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-              </span>
-            ) : selectedVariations[currentProduct.product_id]?.quality &&
+            { selectedVariations[currentProduct.product_id]?.quality &&
               selectedVariations[currentProduct.product_id]?.presentation ? (
               <span>
                 Precio: $
