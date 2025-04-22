@@ -87,7 +87,7 @@ const ManageData = () => {
 
   const deleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/deleteproduct/${productId.toLocaleString()}`);
+      await axios.delete(`https://don-kampo-api-5vf3.onrender.com/api/deleteproduct/${productId.toLocaleString()}`);
       fetchProducts({ success: "Producto eliminado correctamente.", error: "Error al eliminar el producto." });
     } catch (error) {
       console.error(error);
@@ -123,10 +123,9 @@ const ManageData = () => {
           }
         });        
         
-        console.log(product)
         // Envía la solicitud al servidor
         await axios.put(
-          `http://localhost:8080/api/updateproduct/${selectedProduct.product_id}`,
+          `https://don-kampo-api-5vf3.onrender.com/api/updateproduct/${selectedProduct.product_id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -149,7 +148,7 @@ const ManageData = () => {
 
     try {
       await axios.put(
-        `http://localhost:8080/api/updateproduct/${updatedProduct.product_id}`,
+        `https://don-kampo-api-5vf3.onrender.com/api/updateproduct/${updatedProduct.product_id}`,
         updatedProduct
       );
       setIsModalVisible(false);
@@ -163,7 +162,7 @@ const ManageData = () => {
 
   const generateExcelFromProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/products", {
+      const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/products", {
         withCredentials: true,
       });
 
@@ -204,26 +203,30 @@ const ManageData = () => {
       const variationSheet = XLSX.utils.aoa_to_sheet(variationSheetData);
 
       // Hoja de Presentaciones
-      const presentationSheetData = [['Id Variacion', 'Presentacion', 'Precio Hogar', 'Precio Supermercado', 'Precio Restaurante', 'Precio Fruver']];
+      const presentationSheetData = [
+        ['Nombre', 'Calidad', 'Id Variacion', 'Presentacion', 'Precio Hogar', 'Precio Supermercado', 'Precio Restaurante', 'Precio Fruver']
+      ];
+
       products.forEach(product => {
-        if (product.variations && product.variations.length > 0) {
+        if (product.variations?.length > 0) {
           product.variations.forEach(variation => {
-            if (variation.presentations && variation.presentations.length > 0) {
-              variation.presentations.forEach(presentation => {
-                presentationSheetData.push([
-                  variation.variation_id,
-                  presentation.presentation,
-                  presentation.price_home,
-                  presentation.price_supermarket,
-                  presentation.price_restaurant,
-                  presentation.price_fruver,
-                ]);
-              });
-            }
+            variation.presentations?.forEach(presentation => {
+              presentationSheetData.push([
+                product.name,            // Nombre del producto (columna 1)
+                variation.quality,       // Calidad de la variación (columna 2)
+                variation.variation_id,  // ID de la variación
+                presentation.presentation, // Presentación
+                presentation.price_home,
+                presentation.price_supermarket,
+                presentation.price_restaurant,
+                presentation.price_fruver
+              ]);
+            });
           });
         }
       });
-      const presentationSheet = XLSX.utils.aoa_to_sheet(presentationSheetData);
+
+      const presentationSheet = XLSX.utils.aoa_to_sheet(presentationSheetData); 
 
       // Crear el libro de Excel y añadir las hojas
       const workbook = XLSX.utils.book_new();
@@ -235,7 +238,6 @@ const ManageData = () => {
       const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
       saveAs(blob, 'Productos.xlsx');
-
     } catch (error) {
       console.error('Error generando el archivo Excel:', error);
     }

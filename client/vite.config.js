@@ -6,7 +6,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     react(),
-    VitePWA({
+    VitePWA({ 
       registerType: 'autoUpdate',
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
@@ -39,7 +39,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',  // Usa HTTP en lugar de HTTPS para el backend local
+        target: 'https://don-kampo-api-5vf3.onrender.com',  // Usa HTTP en lugar de HTTPS para el backend local
         changeOrigin: true,
         secure: false, // Desactiva la verificación de certificado
       },

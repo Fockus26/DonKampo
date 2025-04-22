@@ -24,7 +24,7 @@ const Products = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
@@ -230,6 +230,7 @@ const Products = () => {
           size="large"
         >
           {categories.map((category) => (
+            
             <Option key={category} value={category}>
               {category}
             </Option>
@@ -255,7 +256,6 @@ const Products = () => {
                 { currentProducts.map(product => {            
                   const firstVariation = product.variations[0];
                   const { name, category, description, product_id: id, photo_url: url, promocionar } = product
-
                   return (
                     <Card
                       key={id}
@@ -278,7 +278,7 @@ const Products = () => {
                         <h3 className="product-name">{name}</h3>
                         <p className="product-category">{category}</p>
                         <p className="product-description">{description}</p>
-                        { userType === "home" && firstVariation && 
+                        { userType === "home" && firstVariation && currentProduct &&
                           <div className="product-variation-info">
                             <Select
                               disabled={!selectedVariations[currentProduct.product_id]?.quality}
