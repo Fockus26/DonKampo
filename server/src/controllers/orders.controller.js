@@ -19,11 +19,13 @@ export const placeOrder = async (req, res) => {
       `SELECT id, user_type FROM users WHERE id = $1`,
       [userId]
     );
-    if (userResult.rows.length === 0) {
+
+    // Si el usuario no se encuentra y es distinto a los usuarios por default
+    if (!userResult.rows.length && userId !== '0f8fc459-571f-4e15-b653-4eb4558c6450') {
       client.release();
       return res.status(404).json({ msg: 'Usuario no encontrado.' });
     }
-    const userType = userResult.rows[0].user_type;
+    const userType = userResult.rows.length ? userResult.rows[0].user_type : 'home';
     const user_type = userType === 'admin' ? 'fruver' : userType
     const isRestaurant = user_type === 'restaurante';
     const needsElectronicInvoice = isRestaurant || false;
@@ -102,31 +104,19 @@ export const placeOrder = async (req, res) => {
         orderId,
       ]);
       
-        // Creamos los items de la orden
-        for (const item of cartDetails) {
-            await client.query(queries.orders.createOrderItem, [
-                orderId,
-                item.productId,
-                item.quantity,
-                item.price,
-            ]);
-        }
-
-    // Si hay información de envío, guardarla
-    if (shippingMethod && estimatedDelivery && actualDelivery) {
-      await client.query(queries.shipping_info.createShippingInfo, [
-        shippingMethod,
-        trackingNumber,
-        estimatedDelivery,
-        actualDelivery,
-        shippingStatusId,
-        orderId,
-      ]);
+      // Creamos los items de la orden
+      for (const item of cartDetails) {
+          await client.query(queries.orders.createOrderItem, [
+              orderId,
+              item.productId,
+              item.quantity,
+              item.price,
+          ]);
+      }
     }
-
-        client.release();
-        res.status(201).json({ msg: 'Pedido realizado exitosamente.', orderId });
-    }
+    
+    client.release();
+    res.status(201).json({ msg: 'Pedido realizado exitosamente.', orderId });
   } catch (error) {
     console.error('Error al realizar el pedido:', error);
     res.status(500).json({ msg: 'Error interno del servidor.' });
