@@ -196,7 +196,6 @@ const Orders = () => {
                                 Dirección: address,
                                 "Correo Cliente": orderDetails.customer_email,
                                 "Fecha de Pedido": new Date(orderDetails.order_date).toLocaleDateString(),
-                                Total: `$${orderDetails.total}`,
                                 Estado:
                                     orderDetails.status_id === 1
                                         ? "Pendiente"
@@ -205,11 +204,11 @@ const Orders = () => {
                                             : orderDetails.status_id === 3
                                                 ? "Entregado"
                                                 : "Cancelado",
-                                "ID de Variación": item.product_variation_id,
                                 "Nombre del Producto": item.product_name,
                                 Calidad: item.variation.quality,
                                 Cantidad: item.quantity,
                                 Precio: `$${item.price}`,
+                                Total: `$${orderDetails.total}`
                             });
                         });
                     } catch (error) {
