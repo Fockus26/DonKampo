@@ -91,7 +91,7 @@ const ManageData = () => {
 
   const deleteProduct = async (productId) => {
     try {
-      await axios.delete(`https://don-kampo-api-5vf3.onrender.com/api/deleteproduct/${productId.toLocaleString()}`);
+      await axios.delete(`http://localhost:8080/api/deleteproduct/${productId.toLocaleString()}`);
       fetchProducts({ success: "Producto eliminado correctamente.", error: "Error al eliminar el producto." });
     } catch (error) {
       console.error(error);
@@ -167,7 +167,7 @@ const ManageData = () => {
         
         // Envía la solicitud al servidor
         await axios.put(
-          `https://don-kampo-api-5vf3.onrender.com/api/updateproduct/${selectedProduct.product_id}`,
+          `http://localhost:8080/api/updateproduct/${selectedProduct.product_id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -190,7 +190,7 @@ const ManageData = () => {
 
     try {
       await axios.put(
-        `https://don-kampo-api-5vf3.onrender.com/api/updateproduct/${updatedProduct.product_id}`,
+        `http://localhost:8080/api/updateproduct/${updatedProduct.product_id}`,
         updatedProduct
       );
       setIsModalVisible(false);
@@ -204,7 +204,7 @@ const ManageData = () => {
 
   const generateExcelFromProducts = async () => {
     try {
-      const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/products", {
+      const response = await axios.get("http://localhost:8080/api/products", {
         withCredentials: true,
       });
 
@@ -292,11 +292,11 @@ const ManageData = () => {
       const updatedVariations = [...variations];
       const newPresentation = {
         presentation: "",
-        price_fruver: 0,
-        price_home: 0,
-        price_restaurant: 0,
-        price_supermarket: 0,
-        stock: 0
+        price_fruver: null,
+        price_home: null,
+        price_restaurant: null,
+        price_supermarket: null,
+        stock: null
       };
   
       updatedVariations[variationIndex].presentations.push(newPresentation);
