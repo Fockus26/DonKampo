@@ -367,6 +367,9 @@ export const queries = {
     deleteProductVariation: `
       DELETE FROM product_variations WHERE variation_id = $1;
     `,
+    deletePresentation: `
+    DELETE FROM product_presentations WHERE presentation_id = $1;
+  `,
     deletePresentationsByVariation: `
       DELETE FROM product_presentations WHERE variation_id = $1;
     `
