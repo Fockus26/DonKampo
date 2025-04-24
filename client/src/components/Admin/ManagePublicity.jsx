@@ -26,7 +26,7 @@ const ManagePublicity = () => {
   const fetchAdvertisements = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:8080/api/publicidad");
+      const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/publicidad");
       setAdvertisements(response.data);
       setFilteredAdvertisements(response.data);
     } catch (error) {
@@ -81,7 +81,7 @@ const ManagePublicity = () => {
         const formData = new FormData();
         Object.keys(newAd).forEach((key) => formData.append(key, newAd[key]));
 
-        await axios.post("http://localhost:8080/api/publicidad", formData);
+        await axios.post("https://don-kampo-api-5vf3.onrender.com/api/publicidad", formData);
         alert("Publicidad creada exitosamente.");
         setNewAd({ category: "", title: "", description: "", photo_url: null, related_product_id: "" });
         fetchAdvertisements();
@@ -99,7 +99,7 @@ const ManagePublicity = () => {
     if (!window.confirm("¿Está seguro de que desea eliminar esta publicidad?")) return;
 
     try {
-      await axios.delete(`http://localhost:8080/api/publicidad/${id}`);
+      await axios.delete(`https://don-kampo-api-5vf3.onrender.com/api/publicidad/${id}`);
       alert("Publicidad eliminada correctamente.");
       fetchAdvertisements();
     } catch (error) {
@@ -139,7 +139,7 @@ const ManagePublicity = () => {
       formData.append("related_product_id", newAd.related_product_id);
 
       await axios.put(
-        `http://localhost:8080/api/publicidad/${editingAd.advertisement_id}`,
+        `https://don-kampo-api-5vf3.onrender.com/api/publicidad/${editingAd.advertisement_id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

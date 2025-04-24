@@ -65,29 +65,33 @@ const ManageData = () => {
     fetchProducts();
   }, []);
 
-  const addVariation = () => {
-    setVariations([
-      ...variations,
-      {
-        quality: "",
-        quantity: "",
-        price_home: "",
-        price_supermarket: "",
-        price_restaurant: "",
-        price_fruver: "",
-        active: false,
-      },
-    ]);
-  };
+  const addVariation = (form) => {
+    const variations = form.getFieldValue("variations");
 
-  const removeVariation = (index) => {
-    const updatedVariations = variations.filter((_, i) => i !== index);
-    setVariations(updatedVariations);
+    setSelectedProduct(product => ({
+      ...product,
+      variations: [
+        ...variations,
+        {
+          active: true,
+          presentations: [],
+          quality: "",
+        }
+      ]
+    }));
   };
+  
+  const removeVariation = (indexToRemove) => {
+    setSelectedProduct(product => ({
+      ...product,
+      variations: product.variations.filter((_, index) => index !== indexToRemove)
+    }));
+  };
+  
 
   const deleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/deleteproduct/${productId.toLocaleString()}`);
+      await axios.delete(`https://don-kampo-api-5vf3.onrender.com/api/deleteproduct/${productId.toLocaleString()}`);
       fetchProducts({ success: "Producto eliminado correctamente.", error: "Error al eliminar el producto." });
     } catch (error) {
       console.error(error);
@@ -97,15 +101,53 @@ const ManageData = () => {
   const showEditModal = (product) => {
     setSelectedProduct(product);
     form.setFieldsValue(product); // Inicializa los valores del formulario
+
     setVariations(product.variations || []);
     setImageFile(null); // Reinicia el estado de la imagen
     setIsModalVisible(true);
   };
 
+  useEffect(() => {
+    form.setFieldsValue(selectedProduct)
+  }, [selectedProduct, form])
+
+  const validateProduct = (variations) => {
+    if (!variations.length) {
+      message.error(`No hay variaciones`)
+      return false
+    }
+
+    // Validar nombres únicos de variaciones
+    const qualityNames = variations.map(v => v.quality.toLowerCase().trim());
+    const hasDuplicateQuality = new Set(qualityNames).size !== qualityNames.length;
+    if (hasDuplicateQuality) {
+      message.error('Hay nombres de calidad duplicados en las variaciones')
+      return false;
+    }
+  
+    // Validar nombres únicos de presentaciones por cada variación
+    for (let i = 0; i < variations.length; i++) {
+      if (!variations[i].presentations.length) {
+        message.error(`No hay presentaciones en la variación ${variations[i].quality || i + 1}`)
+        return false
+      }
+      const presentationNames = variations[i].presentations.map(p => p.presentation.toLowerCase().trim());
+      const hasDuplicatePresentation = new Set(presentationNames).size !== presentationNames.length;
+      if (hasDuplicatePresentation) {
+        message.error(`Hay presentaciones duplicadas en la variación ${variations[i].quality || i + 1}`)
+        return false;
+      }
+    }
+  
+    return true;
+  };
+  
   const handleUpdateProduct = async (product) => {
     const isValidPriceVariations = validatePriceVariations(product.variations);
 
-    if (isValidPriceVariations) {
+    const isValidProduct = validateProduct(product.variations)
+    
+    if (isValidPriceVariations && isValidProduct) {
       try {
         const formData = new FormData();
 
@@ -125,7 +167,7 @@ const ManageData = () => {
         
         // Envía la solicitud al servidor
         await axios.put(
-          `http://localhost:8080/api/updateproduct/${selectedProduct.product_id}`,
+          `https://don-kampo-api-5vf3.onrender.com/api/updateproduct/${selectedProduct.product_id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -148,7 +190,7 @@ const ManageData = () => {
 
     try {
       await axios.put(
-        `http://localhost:8080/api/updateproduct/${updatedProduct.product_id}`,
+        `https://don-kampo-api-5vf3.onrender.com/api/updateproduct/${updatedProduct.product_id}`,
         updatedProduct
       );
       setIsModalVisible(false);
@@ -162,7 +204,7 @@ const ManageData = () => {
 
   const generateExcelFromProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/products", {
+      const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/products", {
         withCredentials: true,
       });
 
@@ -241,6 +283,42 @@ const ManageData = () => {
     } catch (error) {
       console.error('Error generando el archivo Excel:', error);
     }
+  };
+  
+  const addPresentation = (variationIndex, form) => {
+    const variations = form.getFieldValue("variations");
+
+    setSelectedProduct(product => {
+      const updatedVariations = [...variations];
+      const newPresentation = {
+        presentation: "",
+        price_fruver: 0,
+        price_home: 0,
+        price_restaurant: 0,
+        price_supermarket: 0,
+        stock: 0
+      };
+  
+      updatedVariations[variationIndex].presentations.push(newPresentation);
+  
+      return {
+        ...product,
+        variations: updatedVariations
+      };
+    });
+  };
+  
+  const removePresentation = (variationIndex, presentationIndex) => {
+    setSelectedProduct(product => {
+      const updatedVariations = [...product.variations];
+      updatedVariations[variationIndex].presentations = 
+        updatedVariations[variationIndex].presentations.filter((_, i) => i !== presentationIndex);
+  
+      return {
+        ...product,
+        variations: updatedVariations
+      };
+    });
   };
   
   const ManageProducts = () => {
@@ -439,6 +517,7 @@ const ManageData = () => {
             <Form.List name="variations">
               {(variationFields) =>
                 variationFields.map(({ key, name: varName, ...varField }) => (
+                  
                   <div key={key} style={{ marginBottom: 24, padding: 16, border: '1px solid #ddd' }}>
                     {/* Hidden variation_id */}
                     <Form.Item {...varField} name={[varName, 'variation_id']} hidden>
@@ -481,7 +560,7 @@ const ManageData = () => {
                                     label="Presentación"
                                     rules={[{ required: true }]}
                                   >
-                                    <Input disabled />
+                                    <Input />
                                   </Form.Item>
                               </Col>
                               <Col>
@@ -537,14 +616,56 @@ const ManageData = () => {
                                 </Form.Item>
                               </Col>
                             </Row>
+
+                            <Button
+                              type="danger"
+                              onClick={() => removePresentation(varName, presName)}
+                              style={{
+                                marginTop: "8px",
+                                backgroundColor: "#ff4d4f", // Color rojo
+                                color: "#fff", // Texto blanco
+                                border: "none", // Elimina el borde
+                                width: '100%'
+                              }}
+                            >
+                              Eliminar Presentacion
+                            </Button>
                           </div>
                         ))
                       }
                     </Form.List>
+
+                    <Button
+                      onClick={() => addPresentation(varName, form)}
+                      style={{ marginTop: '8px', width: "100%", borderColor: '#00983a', color: '#00983a' }}
+                    >
+                      Agregar Presentacion
+                    </Button>
+
+                    <Button
+                      type="danger"
+                      onClick={() => removeVariation(varName)}
+                      style={{
+                        marginTop: "8px",
+                        backgroundColor: "#ff4d4f", // Color rojo
+                        color: "#fff", // Texto blanco
+                        border: "none", // Elimina el borde
+                        width: '100%'
+                      }}
+                    >
+                      Eliminar Variación
+                    </Button>
                   </div>
                 ))
               }
             </Form.List>
+
+            <Button
+              onClick={() => addVariation(form)}
+              style={{ marginBottom: "16px", width: "100%", borderColor: '#00983a', color: '#00983a' }}
+            >
+              Agregar Variación
+            </Button>
 
             <Form.Item>
               <Button type="primary" htmlType="submit" block>

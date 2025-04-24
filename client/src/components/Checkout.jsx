@@ -77,7 +77,7 @@ const Checkout = () => {
             const [productId] = key.split('-');
 
             const response = await axios.get(
-              `http://localhost:8080/api/getproduct/${productId}`
+              `https://don-kampo-api-5vf3.onrender.com/api/getproduct/${productId}`
             );
 
             return {
@@ -145,7 +145,7 @@ const Checkout = () => {
         };
 
         await axios.put(
-          `http://localhost:8080/api/updateusers/${userData.id}`,
+          `https://don-kampo-api-5vf3.onrender.com/api/updateusers/${userData.id}`,
           updatedData
         );
         message.success("Datos actualizados exitosamente.");
@@ -221,7 +221,7 @@ const Checkout = () => {
         console.log(orderData)
         try {
           const response = await axios.post(
-            "http://localhost:8080/api/orders/placeOrder",
+            "https://don-kampo-api-5vf3.onrender.com/api/orders/placeOrder",
             orderData
           );
           if (response.status === 201) {

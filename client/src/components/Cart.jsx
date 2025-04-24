@@ -40,7 +40,7 @@ const Cart = () => {
             const [productId] = key.split('-');
             
             const response = await axios.get(
-              `http://localhost:8080/api/getproduct/${productId}`
+              `https://don-kampo-api-5vf3.onrender.com/api/getproduct/${productId}`
             );
 
             return {
