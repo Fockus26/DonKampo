@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, Button, Select, Popconfirm, Spin, message, Card, DatePicker, Modal, Alert, notification } from 'antd';
-import { Option } from 'antd/es/mentions';
 import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx';
 import "css/Orders.css";
 
 import getFetch from "utils/getFetch"
-import { getPrice, getShippingCost } from 'utils/getDataByUserType';
+import { getShippingCost } from 'utils/getDataByUserType';
+import formatPrice from 'utils/formatPrice.js'
+import { isString } from 'antd/es/button';
 
 const { RangePicker } = DatePicker;
 
@@ -16,23 +17,19 @@ const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [filteredOrders, setFilteredOrders] = useState([]);
-    const [statusFilter, setStatusFilter] = useState(null);
+    const [statusFilter, setStatusFilter] = useState(0);
     const [dateRange, setDateRange] = useState([null, null]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [orderDetails, setOrderDetails] = useState(null);
 
-
-    useEffect(() => {
-        fetchOrders();
-    }, []);
-
     const fetchOrders = async () => {
+        setLoading(true)
         try {
             const response = await axios.get("http://localhost:8080/api/orders");
 
             // Procesar datos de órdenes
             const dataOrders = response.data.map(item => {
-                const total = item.items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+                const total = formatPrice(item.items.reduce((acc, item) => acc + item.price * item.quantity, 0))
                 return {
                     ...item.order,
                     email: item.userData?.email || '',
@@ -42,6 +39,7 @@ const Orders = () => {
 
             setOrders(dataOrders); // Establecer órdenes procesadas
             setFilteredOrders(dataOrders); // Inicialmente, mostrar todas las órdenes
+            setLoading(false)
         } catch (error) {
             message.error("Error al cargar los pedidos.");
             console.error(error);
@@ -49,20 +47,12 @@ const Orders = () => {
     };
 
     useEffect(() => {
-        if (statusFilter === null) {
-            setFilteredOrders(orders); // Si no hay filtro, muestra todas las órdenes
-        } else {
-            const filtered = orders.filter((order) => order.status_id === statusFilter);
-            setFilteredOrders(filtered); // Filtra las órdenes según el estado seleccionado
-        }
-    }, [statusFilter, orders]); // Se ejecuta cuando cambia el filtro o las órdenes
+        fetchOrders();
+    }, []);
 
     useEffect(() => {
-        let filtered = [...orders];
-
-        if (statusFilter !== null) {
-            filtered = filtered.filter(order => order.status_id === statusFilter);
-        }
+        let filtered = [...orders]; 
+        if (statusFilter !== 0) filtered = filtered.filter(order => order.status_id === statusFilter);
 
         if (dateRange[0] && dateRange[1]) {
             const [start, end] = dateRange;
@@ -71,7 +61,7 @@ const Orders = () => {
                 return orderDate >= start && orderDate <= end;
             });
         }
-
+        
         setFilteredOrders(filtered);
     }, [statusFilter, dateRange, orders]);
 
@@ -105,6 +95,8 @@ const Orders = () => {
 
         const { order, items, userData } = orderDetails;        
 
+        const total = formatPrice(items.reduce((prev, curr) => (curr.price * curr.quantity) + prev, 0))
+
         return (
             <div>
                 <p><strong>ID de Orden:</strong> {order.id}</p>
@@ -113,7 +105,7 @@ const Orders = () => {
                 <p><strong>Teléfono:</strong> {userData.phone}</p>
                 <p><strong>Dirección:</strong> {userData.address}, {userData.neighborhood}, {userData.city}</p>
                 <p><strong>Fecha de Pedido:</strong> {new Date(order.order_date).toLocaleDateString()}</p>
-                <p><strong>Total (incluye envío):</strong> ${Math.floor(order.total).toLocaleString()}</p>
+                <p><strong>Total:</strong> ${total}</p>
                 <p><strong>Estado:</strong>
                     {order.status_id === 1
                         ? "Pendiente"
@@ -137,15 +129,16 @@ const Orders = () => {
                     <tbody>
                         {items.map((item, index) => {
                             const price = item.price
-                            const unitPrice = Math.trunc(price);
-                            const total = item.quantity * unitPrice;
+                            const quantity = formatPrice(item.quantity)
+                            const unitPrice = formatPrice(Math.trunc(price));
+                            const total = formatPrice(quantity * unitPrice);
 
                             return (
                             <tr key={index}>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.product_name} ({item.quality} {item.quantity} {item.presentation})</td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.quantity}</td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>${unitPrice.toLocaleString()}</td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>${total.toLocaleString()}</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.product_name} ({item.quality} - {item.presentation})</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{quantity}</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>${unitPrice}</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>${total}</td>
                             </tr>
                             )
                         })}
@@ -375,12 +368,13 @@ const Orders = () => {
             ];
         
             const tableData = orderData.items.flatMap((item) => {
-              
+                const price = isString(item.price) ? parseInt(item.price) : item.price
+
                 return {
                 description: `${item.product_name} (${item.quality} ${item.presentation})`,
-                unitPrice: `${item.price.toLocaleString()}`,
-                quantity: item.quantity,
-                subtotal: `${(item.price * item.quantity).toLocaleString()}`
+                unitPrice: formatPrice(price),
+                quantity: formatPrice(item.quantity),
+                subtotal: formatPrice(price * item.quantity)
                 };
             });
               
@@ -398,10 +392,10 @@ const Orders = () => {
             // **Agregar subtotales, envío y total al final**
             doc.setFontSize(12);
             doc.setFont('helvetica', 'normal');
-            doc.text(`Valor envio: (${percentageShippingCost * 100}%): $${amountShippingCost.toLocaleString()}`, 10, finalY + 5);
-            doc.text(`Valor Productos: $${total.toLocaleString()}`, 10, finalY);
+            doc.text(`Valor envio: (${percentageShippingCost * 100}%): $${formatPrice(amountShippingCost)}`, 10, finalY + 5);
+            doc.text(`Valor Productos: $${formatPrice(total)}`, 10, finalY);
             doc.setFontSize(14);
-            doc.text(`Total Pedido: $${subtotal.toLocaleString()}`, 10, finalY + 10);
+            doc.text(`Total Pedido: $${formatPrice(subtotal)}`, 10, finalY + 10);
 
             doc.setTextColor(255, 0, 0);
             doc.text(`Los pedidos pueden ser fluctuantes, por lo tanto pueden variar`, 10, finalY + 15);
@@ -450,11 +444,11 @@ const Orders = () => {
                         style={{ width: 120 }}
                         onClick={(e) => e.stopPropagation()} // Evita que el evento burbujee
                     >
-                        <Option value={1}>Pendiente</Option>
-                        <Option value={2}>Enviado</Option>
-                        <Option value={3}>Entregado</Option>
-                        <Option value={4}>Cancelado</Option>
-                        <Option value={5}>Pagado</Option>
+                        <Select.Option value={1}>Pendiente</Select.Option>
+                        <Select.Option value={2}>Enviado</Select.Option>
+                        <Select.Option value={3}>Entregado</Select.Option>
+                        <Select.Option value={4}>Cancelado</Select.Option>
+                        <Select.Option value={5}>Pagado</Select.Option>
                     </Select>
                     <Popconfirm
                         title="¿Estás seguro de eliminar este pedido?"
@@ -480,12 +474,6 @@ const Orders = () => {
         
     ];
 
-    useEffect(() => {
-        let filtered = orders.filter(order => order.status_id === 1); // Mostrar solo pendientes por defecto
-        filtered.sort((a, b) => new Date(b.order_date) - new Date(a.order_date)); // Orden descendente por fecha
-        setFilteredOrders(filtered);
-    }, [orders]);
-
     return (
         <Card title="Gestión de Pedidos" style={{ marginTop: '20px' }}>
             <div style={{ marginBottom: '20px', display: 'flex', gap: '16px' }}>
@@ -493,14 +481,15 @@ const Orders = () => {
                     placeholder="Filtrar por estado"
                     allowClear
                     onChange={handleStatusFilterChange}
+                    value={statusFilter}
                     style={{ width: 200 }}
                 >
-                    <Option value={null}>Todos</Option>
-                    <Option value={1}>Pendiente</Option>
-                    <Option value={2}>Enviado</Option>
-                    <Option value={3}>Entregado</Option>
-                    <Option value={4}>Cancelado</Option>
-                    <Option value={5}>Pagado</Option>
+                    <Select.Option value={0}>Todos</Select.Option>
+                    <Select.Option value={1}>Pendiente</Select.Option>
+                    <Select.Option value={2}>Enviado</Select.Option>
+                    <Select.Option value={3}>Entregado</Select.Option>
+                    <Select.Option value={4}>Cancelado</Select.Option>
+                    <Select.Option value={5}>Pagado</Select.Option>
                 </Select>
                 <RangePicker
                     onChange={handleDateRangeChange}

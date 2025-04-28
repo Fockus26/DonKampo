@@ -13,7 +13,7 @@ import { useCart } from "components/Products/CartContext"; // Importa el hook de
 import "css/General.css";
 import { FaMobileAlt } from "react-icons/fa";
 
-const Header = ({ setShowInstallPrompt }) => {
+const Header = ({ setShowInstallPrompt, setForceShow }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -121,7 +121,7 @@ const Header = ({ setShowInstallPrompt }) => {
       <nav>
         <ul>
           <li>
-            <a className="app" href="#" onClick={() => setShowInstallPrompt(true)}>
+            <a className="app" href="#" onClick={() => { setShowInstallPrompt(true); setForceShow(true) }}>
               <i className="fa-solid fa-mobile-screen" /> App
             </a>
           </li>
@@ -275,7 +275,7 @@ const Header = ({ setShowInstallPrompt }) => {
           <Menu.Item
             key="app"
             icon={<AppstoreOutlined />}
-            onClick={() => setShowInstallPrompt(true)}
+            onClick={() => { setShowInstallPrompt(true); setForceShow(true) }}
           >
             App
           </Menu.Item>

@@ -15,6 +15,7 @@ import FloatingButtons from "components/General/FloatingButtons";
 import getFetch from 'utils/getFetch.js'
 import { getPrice } from "utils/getDataByUserType";
 import { userType } from "utils/getUser";
+import formatPrice from 'utils/formatPrice.js'
 
 import "css/Home.css";
 
@@ -48,6 +49,7 @@ const Home = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [ showInstallPrompt, setShowInstallPrompt ] = useState(true)
+  const [ forceShow, setForceShow ] = useState(false)
   
   const handleSearch = value => navigate(`/products?search=${encodeURIComponent(value)}`);
 
@@ -96,17 +98,19 @@ const Home = () => {
 
   return (
     <>
-      <Header setShowInstallPrompt={setShowInstallPrompt} />
+      <Header setShowInstallPrompt={setShowInstallPrompt} setForceShow={setForceShow} />
       <main>
         <div className="background-home" />
         <div className="search-bar">
           <AutoComplete
             className="custom-search-bar" // Agregamos una clase personalizada
             options={searchResults.map((product) => {
-              const prices = product.variations.map(variation => getPrice(variation))
-                            
-              const minPrice = Math.min(...prices);
-
+              const prices = product.variations.flatMap(variation =>
+                variation.presentations.map(presentation => getPrice(presentation))
+              );
+              
+              const minPrice = formatPrice(Math.min(...prices))
+              
               return {
                 value: product.name,
                 key: product.product_id,
@@ -232,7 +236,10 @@ const Home = () => {
       </main>
       <Footer setShowInstallPrompt={setShowInstallPrompt} />
 
-      <InstallPrompt showInstallPrompt={showInstallPrompt} setShowInstallPrompt={setShowInstallPrompt} />
+      <InstallPrompt 
+        showInstallPrompt={showInstallPrompt} setShowInstallPrompt={setShowInstallPrompt} 
+        forceShow={forceShow} setForceShow={setForceShow}
+      />
 
       <FloatingButtons />
     </>

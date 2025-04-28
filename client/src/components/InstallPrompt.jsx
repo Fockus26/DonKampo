@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import "css/InstallPrompt.css";
 import "font-awesome/css/font-awesome.min.css";
 
-const InstallPrompt = ({ showInstallPrompt, setShowInstallPrompt }) => {
+const InstallPrompt = ({ showInstallPrompt, setShowInstallPrompt, forceShow, setForceShow }) => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstalled, setIsInstalled] = useState(false);
-  
-  
+
   useEffect(() => {
     // Verificar si la app está instalada (funciona dentro del PWA)
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;  
@@ -33,7 +32,7 @@ const InstallPrompt = ({ showInstallPrompt, setShowInstallPrompt }) => {
     };
   }, []);
 
-  if (!showInstallPrompt) return
+  if (!showInstallPrompt || (isInstalled && !forceShow)) return null;
 
   const handleInstall = () => {
     if (deferredPrompt) {
@@ -41,6 +40,7 @@ const InstallPrompt = ({ showInstallPrompt, setShowInstallPrompt }) => {
       deferredPrompt.userChoice.then(() => {
         setDeferredPrompt(null);
         setShowInstallPrompt(false);
+        setForceShow(false)
       });
     }
   };
@@ -65,7 +65,7 @@ const InstallPrompt = ({ showInstallPrompt, setShowInstallPrompt }) => {
         </ul>
 
         <div className="modal-actions">
-          <button onClick={() => setShowInstallPrompt(false)}>Cerrar</button>
+          <button onClick={() => { setShowInstallPrompt(false); setForceShow(false)}}>Cerrar</button>
           {!isInstalled && <button onClick={handleInstall}>Instalar</button>}
         </div>
       </div>

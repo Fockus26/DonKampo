@@ -116,6 +116,7 @@ const UpdateMultipleProducts = () => {
                   product.variations.forEach((variation) => {
                     if (variation.variation_id === presObj["Id Variacion"]) {
                       variation.presentations.push({
+                        presentation_id: presObj["Id Presentacion"],
                         presentation: presObj["Presentacion"],
                         price_home: presObj["Precio Hogar"],
                         price_supermarket: presObj["Precio Supermercado"],

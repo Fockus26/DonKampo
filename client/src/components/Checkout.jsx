@@ -15,6 +15,7 @@ import { getShippingCost, getPrice, isAmountCheckout } from "utils/getDataByUser
 
 import "css/Checkout.css";
 import fruits from 'assets/fruits.jpg'
+import formatPrice from 'utils/formatPrice.js'
 
 const Checkout = () => {
   const [actualUser, setActualUser] = useState({});
@@ -113,7 +114,7 @@ const Checkout = () => {
   const subtotal = calculateSubtotal()
   const percentageShippingCost = discountedShippingCost ?? shippingCost
   const amountShippingCost = subtotal * percentageShippingCost
-  const total = subtotal * (1 + percentageShippingCost);
+  const total = subtotal * (1 + percentageShippingCost)
   
   useEffect(() => {
     if (!loading) {
@@ -321,12 +322,13 @@ const Checkout = () => {
     const tableData = cartDetails.map((product) => {
       const { selectedVariation: variation, name } = product
       const { quality, presentation, quantity } = variation
+      const sub = (getPrice(variation) * quantity)
 
       return {
         description: `${name} (${quality} - ${presentation})`,
-        unitPrice: `$${getPrice(variation).toLocaleString()}`,
-        quantity,
-        subtotal: `$${(getPrice(variation) * quantity).toLocaleString()}`,
+        unitPrice: `$${formatPrice(getPrice(variation))}`,
+        quantity: formatPrice(quantity),
+        subtotal: `$${formatPrice(sub)}`,
       }
     });
 
@@ -344,10 +346,10 @@ const Checkout = () => {
     // **Agregar subtotales, envío y total al final**
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Subtotal: $${subtotal.toLocaleString()}`, 10, finalY);
-    doc.text(`Envío (${percentageShippingCost * 100}%): $${amountShippingCost.toLocaleString()}`, 10, finalY + 5);
+    doc.text(`Subtotal: $${formatPrice(subtotal)}`, 10, finalY);
+    doc.text(`Envío (${percentageShippingCost * 100}%): $${formatPrice(amountShippingCost)}`, 10, finalY + 5);
     doc.setFontSize(14);
-    doc.text(`Total: $${total.toLocaleString()}`, 10, finalY + 10);
+    doc.text(`Total: $${formatPrice(total)}`, 10, finalY + 10);
 
     doc.setFontSize(14);
     doc.setTextColor(255, 0, 0);
@@ -464,20 +466,20 @@ const Checkout = () => {
 
               return (
                 <div key={id} className="order-summary-item">
-                  <span>{name} ({quality} -{" "} {presentation}) x {quantity}</span>
+                  <span>{name} ({quality} -{" "} {presentation}) x {formatPrice(quantity)}</span>
                   <div className="quantity-controls">
                     <Button onClick={() => removeFromCart({product})}>-</Button>
-                    <span className="quantity-text">{quantity}</span>
+                    <span className="quantity-text">{formatPrice(quantity)}</span>
                     <Button onClick={() => handleAddToCart(product)}>+</Button>
                   </div>
-                  <span>${(getPrice(variation) * quantity).toLocaleString()}</span>
+                  <span>${formatPrice(getPrice(variation) * quantity)}</span>
                 </div>
               )
             })}
 
             <Divider />
-            <p>Subtotal: <span>${subtotal.toLocaleString()}</span></p>
-            <p>Envío ({percentageShippingCost * 100}%): <span>${amountShippingCost.toLocaleString()}</span></p>
+            <p>Subtotal: <span>${formatPrice(subtotal)}</span></p>
+            <p>Envío ({percentageShippingCost * 100}%): <span>${formatPrice(amountShippingCost)}</span></p>
             { isFirstOrder && (
               <p
                 style={{
@@ -512,7 +514,7 @@ const Checkout = () => {
             )}
 
             <Divider />
-            <h4>Total: <span>${total.toLocaleString()}</span></h4>
+            <h4>Total: <span>${formatPrice(total)}</span></h4>
             <Divider />
             
             <h5 style={{ 
@@ -586,15 +588,15 @@ const Checkout = () => {
                   
                   return (
                     <div key={id} className="order-summary-item">
-                      <span>{name} ({quality} -{" "}{presentation}) x {quantity}</span>
-                      <span>${(getPrice(variation) * quantity).toLocaleString()}</span>
+                      <span>{name} ({quality} -{" "}{presentation}) x {formatPrice(quantity)}</span>
+                      <span>${formatPrice(getPrice(variation) * quantity)}</span>
                     </div>
                   )
                 })}
                 <Divider />
-                <p>Subtotal: ${subtotal}</p>
-                <p>Envío ({percentageShippingCost * 100}%): ${amountShippingCost}</p>
-                <h4>Total: ${total}</h4>
+                <p>Subtotal: ${formatPrice(subtotal)}</p>
+                <p>Envío ({percentageShippingCost * 100}%): ${formatPrice(amountShippingCost)}</p>
+                <h4>Total: ${formatPrice(total)}</h4>
               </div>
             </Modal>
           </div>

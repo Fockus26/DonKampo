@@ -17,7 +17,7 @@ import {
   Select,
   Switch,
 } from "antd";
-import { SearchOutlined, EditOutlined, DeleteOutlined, ConsoleSqlOutlined } from "@ant-design/icons";
+import { SearchOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -36,14 +36,9 @@ import { UploadOutlined } from '@ant-design/icons';
 
 const ManageData = () => {
   const [products, setProducts] = useState([]);
-  const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedPresentations, setSelectedPresentations] = useState({});
-  const [selectedIndexPresentation, setSelectedIndexPresentation] = useState(0)
-
-  const [variations, setVariations] = useState([]);
   const [form] = Form.useForm();
   const [imageFile, setImageFile] = useState(null);
 
@@ -58,7 +53,7 @@ const ManageData = () => {
         message.error(msg.error);
         console.error(error);
       })
-      .finally(setLoading(false))
+      .finally(() => setLoading(false))
   };
 
   useEffect(() => {
@@ -88,7 +83,6 @@ const ManageData = () => {
     }));
   };
   
-
   const deleteProduct = async (productId) => {
     try {
       await axios.delete(`http://localhost:8080/api/deleteproduct/${productId.toLocaleString()}`);
@@ -102,13 +96,14 @@ const ManageData = () => {
     setSelectedProduct(product);
     form.setFieldsValue(product); // Inicializa los valores del formulario
 
-    setVariations(product.variations || []);
     setImageFile(null); // Reinicia el estado de la imagen
     setIsModalVisible(true);
   };
 
   useEffect(() => {
-    form.setFieldsValue(selectedProduct)
+    if (selectedProduct) {
+      form.setFieldsValue(selectedProduct)
+    }
   }, [selectedProduct, form])
 
   const validateProduct = (variations) => {
@@ -200,8 +195,6 @@ const ManageData = () => {
     }
   }
 
-  const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchText.toLowerCase()));
-
   const generateExcelFromProducts = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/products", {
@@ -214,7 +207,7 @@ const ManageData = () => {
 
       const products = response.data;
       // Hoja de Productos
-      const productSheetData = [['Id', 'Nombre', 'Descripcion', 'Categoría', 'Promocionar', 'Activo']];
+      const productSheetData = [['Id', 'Nombre', 'Descripcion', 'Categoria', 'Promocionar', 'Activo']];
       products.forEach(product => {
         productSheetData.push([
           product.product_id,
@@ -246,7 +239,7 @@ const ManageData = () => {
 
       // Hoja de Presentaciones
       const presentationSheetData = [
-        ['Nombre', 'Calidad', 'Id Variacion', 'Presentacion', 'Precio Hogar', 'Precio Supermercado', 'Precio Restaurante', 'Precio Fruver']
+        ['Nombre', 'Calidad', 'Id Variacion', 'Id Presentacion', 'Presentacion', 'Precio Hogar', 'Precio Supermercado', 'Precio Restaurante', 'Precio Fruver']
       ];
 
       products.forEach(product => {
@@ -257,6 +250,7 @@ const ManageData = () => {
                 product.name,            // Nombre del producto (columna 1)
                 variation.quality,       // Calidad de la variación (columna 2)
                 variation.variation_id,  // ID de la variación
+                presentation.presentation_id,
                 presentation.presentation, // Presentación
                 presentation.price_home,
                 presentation.price_supermarket,
@@ -378,10 +372,12 @@ const ManageData = () => {
       },
     ];
 
+    const [searchText, setSearchText] = useState("");
+    const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchText.toLowerCase()));
+
     return (
       <>
         <h2>Gestionar Productos</h2>
-
         <div className="manage-search">
           <Input
             placeholder="Buscar producto por nombre"
@@ -447,6 +443,7 @@ const ManageData = () => {
               </div>
             ) : null}
           </Form.Item>
+
           <Form
             form={form}
             onFinish={handleUpdateProduct}
@@ -519,7 +516,6 @@ const ManageData = () => {
                 variationFields.map(({ key, name: varName, ...varField }) => (
                   
                   <div key={key} style={{ marginBottom: 24, padding: 16, border: '1px solid #ddd' }}>
-                    {/* Hidden variation_id */}
                     <Form.Item {...varField} name={[varName, 'variation_id']} hidden>
                       <Input />
                     </Form.Item>
@@ -547,7 +543,6 @@ const ManageData = () => {
                       </Col>
                     </Row>
 
-                    {/* Lista de presentaciones */}
                     <Form.List name={[varName, 'presentations']}>
                       {(presFields) =>
                         presFields.map(({ key: pKey, name: presName, ...presField }) => (
@@ -673,6 +668,7 @@ const ManageData = () => {
               </Button>
             </Form.Item>
           </Form>
+
         </Modal>
       </>
     )

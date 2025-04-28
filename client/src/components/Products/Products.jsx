@@ -7,6 +7,7 @@ import FloatingButtons from "components/General/FloatingButtons";
 import { userType } from "utils/getUser";
 import { getPrice } from "utils/getDataByUserType";
 import getFetch from 'utils/getFetch.js';
+import formatPrice from 'utils/formatPrice.js';
 import "css/Products.css";
 
 const { Option } = Select;
@@ -376,16 +377,15 @@ const Products = () => {
               selectedVariations[currentProduct.product_id]?.presentation ? (
               <span>
                 Precio: $
-                {(
-                  getPrice(
-                    currentProduct.variations
-                    .find(v => v.quality === selectedVariations[currentProduct.product_id]?.quality)
-                    .presentations.find(p => p.presentation === selectedVariations[currentProduct.product_id].presentation)
-                  ) * (quantities[currentProduct.product_id] || 1)
-                )
-                  .toFixed(2)
-                  .replace(/\.00$/, "")
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                {
+                  formatPrice(
+                    getPrice(
+                      currentProduct.variations
+                      .find(v => v.quality === selectedVariations[currentProduct.product_id]?.quality)
+                      .presentations.find(p => p.presentation === selectedVariations[currentProduct.product_id].presentation)
+                    ) * (quantities[currentProduct.product_id] || 1)
+                  )
+                }
               </span>
             ) : (
               <span>Selecciona calidad y presentacion para ver el precio!</span>

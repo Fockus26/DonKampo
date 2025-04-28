@@ -13,6 +13,7 @@ import { getShippingCost, getPrice, isAmountCheckout } from "utils/getDataByUser
 
 import "css/Cart.css";
 import fruits from 'assets/fruits.jpg'
+import formatPrice from 'utils/formatPrice.js'
 
 const Cart = () => {
   const { cart, removeFromCart, addToCart, clearCart } = useCart();
@@ -125,15 +126,15 @@ const Cart = () => {
                           <h4>{name}</h4>
                           <p>Categoría: {category}</p>
                           <p>Calidad: {quality}</p>
-                          <p>Cantidad: {quantity}</p>
+                          <p>Cantidad: {formatPrice(quantity)}</p>
                           <p>Presentacion: {presentation}</p>
-                          <p>Precio: ${getPrice(variation).toLocaleString()}</p>
-                          <p>Subtotal: ${(getPrice(variation) * quantity).toLocaleString()}</p>
+                          <p>Precio: ${formatPrice(getPrice(variation))}</p>
+                          <p>Subtotal: ${formatPrice(getPrice(variation) * quantity)}</p>
                         </div>
                       </div>
                       <div className="cart-item-quantity">
                         <Button onClick={() => removeFromCart({product})}>-</Button>
-                        <span>{quantity}</span>
+                        <span>{formatPrice(quantity)}</span>
                         <Button onClick={() => handleAddToCart(product)}>+</Button>
                       </div>
                       <div className="cart-item-delete">
@@ -147,8 +148,8 @@ const Cart = () => {
             <div className="cart-summary">
               <h3>Total del Carrito</h3>
               <Divider />
-              <p>Subtotal: ${calculateSubtotal().toLocaleString()}</p>
-              <p><strong>Total: ${total.toLocaleString()}</strong></p>
+              <p>Subtotal: ${formatPrice(calculateSubtotal())}</p>
+              <p><strong>Total: ${formatPrice(total)}</strong></p>
               <Button
                 type="primary"
                 className="checkout-button"
@@ -171,6 +172,6 @@ const Cart = () => {
       <CustomFooter />
     </>
   );
-};
+};  
 
 export default Cart;
