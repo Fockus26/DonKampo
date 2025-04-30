@@ -62,7 +62,7 @@ const Register = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/createusers",
+        "https://don-kampo-api-5vf3.onrender.com/api/createusers",
         {
           user_name,
           lastname,

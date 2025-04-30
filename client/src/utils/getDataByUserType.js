@@ -14,7 +14,6 @@ const getShippingCost = (shippingData, user_type = userType) => {
         : user_type === 'restaurant' ? 'Restaurante'
         : 'Fruver'
  
-    if (formattedUserType === 'Hogar') return 3 / 100
     const shippingCost = shippingData.filter(data => data.type_name === formattedUserType)[0].shipping_cost
     return shippingCost / 100
 }

@@ -26,11 +26,9 @@ const Checkout = () => {
   const [companyName, setCompanyName] = useState("");
   const [companyNit, setCompanyNit] = useState("");
   const [shippingCost, setShippingCost] = useState(0);
-  const [discountedShippingCost, setDiscountedShippingCost] = useState(null);
 
   const { cart, clearCart, addToCart, removeFromCart } = useCart();
   const navigate = useNavigate();
-  const [isFirstOrder, setIsFirstOrder] = useState(false);
 
   const [checkTerms, setCheckTerms] = useState(false);
 
@@ -45,11 +43,6 @@ const Checkout = () => {
           getFetch('users', `/${userData.id}`)
           .then(fetchedUser => {
             setActualUser(fetchedUser.user)
-            
-            if (!fetchedUser.orders.length) {                            
-              setIsFirstOrder(true)
-              setDiscountedShippingCost(shippingCost / 2);
-            } 
 
             setShippingCost(shippingCost)
           })
@@ -78,7 +71,7 @@ const Checkout = () => {
             const [productId] = key.split('-');
 
             const response = await axios.get(
-              `http://localhost:8080/api/getproduct/${productId}`
+              `https://don-kampo-api-5vf3.onrender.com/api/getproduct/${productId}`
             );
 
             return {
@@ -112,7 +105,7 @@ const Checkout = () => {
   }, [cartDetails])
   
   const subtotal = calculateSubtotal()
-  const percentageShippingCost = discountedShippingCost ?? shippingCost
+  const percentageShippingCost = shippingCost
   const amountShippingCost = subtotal * percentageShippingCost
   const total = subtotal * (1 + percentageShippingCost)
   
@@ -146,7 +139,7 @@ const Checkout = () => {
         };
 
         await axios.put(
-          `http://localhost:8080/api/updateusers/${userData.id}`,
+          `https://don-kampo-api-5vf3.onrender.com/api/updateusers/${userData.id}`,
           updatedData
         );
         message.success("Datos actualizados exitosamente.");
@@ -170,13 +163,15 @@ const Checkout = () => {
   
     if (needsElectronicInvoice) requiredFields.push("companyName", "companyNit")
 
-    const isValid = requiredFields.every(field =>
-      field === "companyName" || field === "companyNit"
-        ? needsElectronicInvoice
-          ? !!eval(field)
-          : true
-        : actualUser?.[field]?.trim()
-    );
+    const isValid = requiredFields.every(field => {
+      const verifyElectronicInvoice = () => needsElectronicInvoice ? !!eval(field) : true
+      const verifyField = () => (userType !== 'home' && field === 'lastname') ? true : actualUser?.[field]?.trim()
+      
+      const isNeedsElectronicVoice = field === "companyName" || field === "companyNit"
+      const isVerified = isNeedsElectronicVoice ? verifyElectronicInvoice() : verifyField()
+
+      return isVerified
+    });
 
     return isValid;
   };
@@ -221,7 +216,7 @@ const Checkout = () => {
 
         try {
           const response = await axios.post(
-            "http://localhost:8080/api/orders/placeOrder",
+            "https://don-kampo-api-5vf3.onrender.com/api/orders/placeOrder",
             orderData
           );
           if (response.status === 201) {
@@ -377,8 +372,8 @@ const Checkout = () => {
           { actualUser && (
             <Form layout="vertical" className="checkout-form">
               <Row gutter={16}>
-                <Col xs={24} sm={12}>
-                  <Form.Item label="Nombre">
+                <Col xs={24} sm={userType === 'home' ? 12 : 24}>
+                  <Form.Item label={`Nombre ${userType === 'home' ? '' : 'Comercial'}`}>
                     <Input
                       name="user_name"
                       value={actualUser.user_name}
@@ -386,15 +381,17 @@ const Checkout = () => {
                     />
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item label="Apellido">
-                    <Input
-                      name="lastname"
-                      value={actualUser.lastname}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Item>
-                </Col>
+                { userType === 'home' && 
+                  <Col xs={24} sm={12}>
+                    <Form.Item label="Apellido">
+                      <Input
+                        name="lastname"
+                        value={actualUser.lastname}
+                        onChange={handleInputChange}
+                      />
+                    </Form.Item>
+                  </Col>
+                }
                 <Col xs={24} sm={12}>
                   <Form.Item label="Email">
                     <Input
@@ -480,17 +477,7 @@ const Checkout = () => {
             <Divider />
             <p>Subtotal: <span>${formatPrice(subtotal)}</span></p>
             <p>Envío ({percentageShippingCost * 100}%): <span>${formatPrice(amountShippingCost)}</span></p>
-            { isFirstOrder && (
-              <p
-                style={{
-                  fontSize: "12px",
-                  color: "#FF914D",
-                  marginTop: "5px",
-                }}
-              >
-                ¡Descuento aplicado al costo de envío por ser tu primer pedido!
-              </p>
-            )}
+
             { userType === "restaurant" && (
               <>
                 <Form.Item label="¿Necesita factura electrónica?">
