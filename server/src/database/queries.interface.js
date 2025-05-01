@@ -261,8 +261,7 @@ export const queries = {
         v.active AS variation_active
       FROM products p
       LEFT JOIN product_variations v ON p.product_id = v.product_id
-      ORDER BY p.created_at DESC
-      LIMIT $2 OFFSET $1;
+      ORDER BY p.created_at DESC;
     `,
     getProductById: `
       SELECT 

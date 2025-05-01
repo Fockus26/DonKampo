@@ -75,7 +75,6 @@ export const updateAdvertisement = async (req, res) => {
   let connection;
   const { id } = req.params;
   const { title, description, category, photo_url } = req.body;
-  console.log(req.body); // Ver los datos recibidos para depuración
 
   const parsedAdvertisementId = parseInt(id, 10);
 
