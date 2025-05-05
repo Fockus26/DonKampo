@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, Button, Select, Popconfirm, Spin, message, Card, DatePicker, Modal, Alert, notification } from 'antd';
-import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx';
 import "css/Orders.css";
 
-import getFetch from "utils/getFetch"
 import { getShippingCost } from 'utils/getDataByUserType';
 import formatPrice from 'utils/formatPrice.js'
-import { isString } from 'antd/es/button';
+import generateOrderPDF from 'utils/generateOrderPDF';
 
 const { RangePicker } = DatePicker;
 
@@ -21,6 +19,12 @@ const Orders = () => {
     const [dateRange, setDateRange] = useState([null, null]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [orderDetails, setOrderDetails] = useState(null);
+    const [shippingPercentage, setShippingPercentage] = useState(null); // Estado para almacenar el porcentaje de envío
+
+    useEffect(() => {
+        if (isModalVisible) fetchShippingCosts()
+        else setShippingPercentage(null) // Limpiar el porcentaje de envío si el modal no está visible
+    }, [isModalVisible]);
 
     const fetchOrders = async () => {
         setLoading(true)
@@ -45,6 +49,15 @@ const Orders = () => {
             console.error(error);
         }
     };
+
+    const fetchShippingCosts = async () => {
+        // Llamar a la API para obtener los tipos de cliente y costos de envío
+        const customerTypeResponse = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/customer-types");
+  
+        const shippingPercentage = getShippingCost(customerTypeResponse.data)
+
+        setShippingPercentage(shippingPercentage); // Almacenar el porcentaje de envío en el estado
+    }
 
     useEffect(() => {
         fetchOrders();
@@ -91,30 +104,40 @@ const Orders = () => {
     };
 
     const renderModalContent = () => {
-        if (!orderDetails) return null; // Si no hay detalles de la orden, no renderizar nada
 
-        const { order, items, userData } = orderDetails;        
+        if (!orderDetails) return <Spin spinning={true} />;; // Si no hay detalles de la orden, no renderizar nada
 
-        const total = formatPrice(items.reduce((prev, curr) => (curr.price * curr.quantity) + prev, 0))
+        const { order, items, userData } = orderDetails;
+        const { id, status_id, order_date, requires_electronic_billing } = order;
+        const { user_name, lastname, email, phone, address, neighborhood, city } = userData
+
+        const subtotal = items.reduce((prev, curr) => (curr.price * curr.quantity) + prev, 0)
+
+        // Verificar si shippingPercentage ya está disponible
+        if (!shippingPercentage) {
+            return <Spin spinning={true} />;
+        }
+
+        const shippingCost = subtotal * shippingPercentage
+        const total = formatPrice(subtotal + shippingCost)
 
         return (
             <div>
-                <p><strong>ID de Orden:</strong> {order.id}</p>
-                <p><strong>Cliente:</strong> {userData.user_name} {userData.lastname}</p>
-                <p><strong>Correo:</strong> {userData.email}</p>
-                <p><strong>Teléfono:</strong> {userData.phone}</p>
-                <p><strong>Dirección:</strong> {userData.address}, {userData.neighborhood}, {userData.city}</p>
-                <p><strong>Fecha de Pedido:</strong> {new Date(order.order_date).toLocaleDateString()}</p>
-                <p><strong>Total:</strong> ${total}</p>
+                <p><strong>ID de Orden:</strong> {id}</p>
+                <p><strong>Cliente:</strong> {user_name} {lastname}</p>
+                <p><strong>Correo:</strong> {email}</p>
+                <p><strong>Teléfono:</strong> {phone}</p>
+                <p><strong>Dirección:</strong> {address}, {neighborhood}, {city}</p>
+                <p><strong>Fecha de Pedido:</strong> {new Date(order_date).toLocaleDateString()}</p>
+                <p><strong>Total (incluye envio):</strong> ${total}</p>
                 <p><strong>Estado:</strong>
-                    {order.status_id === 1
-                        ? "Pendiente"
-                        : order.status_id === 2
-                            ? "Enviado"
-                            : order.status_id === 3
-                                ? "Entregado"
-                                : "Cancelado"}
+                    { status_id === 1
+                        ? "Pendiente" : status_id === 2
+                            ? "Enviado" : status_id === 3
+                                ? "Entregado" : "Cancelado"
+                    }
                 </p>
+                <p><strong>Requiere Factura Electrónica:</strong> {requires_electronic_billing ? "Sí" : "No"}</p>
 
                 <h3>Productos:</h3>
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
@@ -128,16 +151,16 @@ const Orders = () => {
                     </thead>
                     <tbody>
                         {items.map((item, index) => {
-                            const price = item.price
-                            const quantity = formatPrice(item.quantity)
-                            const unitPrice = formatPrice(Math.trunc(price));
+                            const { price, quantity, product_name, quality, presentation } = item
+
+                            const unitPrice = parseInt(price)
                             const total = formatPrice(quantity * unitPrice);
 
                             return (
                             <tr key={index}>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.product_name} ({item.quality} - {item.presentation})</td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{quantity}</td>
-                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>${unitPrice}</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{product_name} ({quality} - {presentation})</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{formatPrice(quantity)}</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>${formatPrice(unitPrice)}</td>
                                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>${total}</td>
                             </tr>
                             )
@@ -159,7 +182,6 @@ const Orders = () => {
                     className="small-alert" // Clase adicional para personalización
                 />
             </div>
-
         );
     };
 
@@ -275,129 +297,6 @@ const Orders = () => {
         }
     };
 
-    const fetchOrderDetailsAndGeneratePDF = async (orderId) => {
-        try {
-            // Llamar a la API para obtener los detalles de la orden
-            const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${orderId}`);
-            const orderData = response.data;
-            const { userData: { user_type } } = response.data
-            
-            let shippingCost = 0;
-
-            // Obtener costos de envío
-            const fetchedShippingCosts = await getFetch('customer-types', '');
-            shippingCost = getShippingCost(fetchedShippingCosts, user_type);
-
-            const percentageShippingCost = shippingCost
-            const total = orderData.items.reduce((acc, item) => acc + item.price * item.quantity, 0)
-            
-            const amountShippingCost = total * percentageShippingCost
-            
-            const subtotal = total + amountShippingCost;
-
-            const doc = new jsPDF();
-            doc.setFontSize(10);
-        
-            // **Insertar el logo de la empresa**
-            const logoUrl = '/images/1.png';
-            doc.addImage(logoUrl, 'PNG', 10, 5, 50, 30);
-        
-            // **Información del remitente**
-            const senderInfo = ['Don Kampo S.A.S', 'Nit 901.865.742', 'Chía - Cundinamarca', '3117366666'];
-            const pageWidth = doc.internal.pageSize.width;
-            const senderX = pageWidth - 50;
-        
-            doc.setFont('helvetica', 'bold');
-            senderInfo.forEach((line, index) => {
-                doc.text(line, senderX, 10 + (index * 5));
-            });
-        
-            // **Título del documento y fecha**
-            doc.setFontSize(14);
-            doc.text("Detalles de la Orden", 10, 35);
-        
-            doc.setFont('helvetica', 'bold');
-            doc.text("ID de la orden:", 10, 50);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`${orderData.order.id}`, 55, 50);
-
-            const status = orderData.order.status_id === 1
-            ? 'Pendiente' : orderData.order.status_id === 2
-                ? 'Enviado' : orderData.order.status_id === 3
-                    ? 'Entregado' : 'Cancelado';
-            doc.setFont('helvetica', 'bold');
-            doc.text("Estado:", 10, 55);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`${status}`, 55, 55);
-        
-            doc.setFont('helvetica', 'bold');
-            doc.text("Cliente:", 10, 60);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`${orderData.userData.user_name} ${orderData.userData.lastname}`, 55, 60);
-        
-            doc.setFont('helvetica', 'bold');
-            doc.text("Correo:", 10, 65);
-            doc.setFont('helvetica', 'normal');
-            doc.text(orderData.userData.email, 55, 65);
-        
-            doc.setFont('helvetica', 'bold');
-            doc.text("Teléfono:", 10, 70);
-            doc.setFont('helvetica', 'normal');
-            doc.text(orderData.userData.phone, 55, 70);
-        
-            doc.setFont('helvetica', 'bold');
-            doc.text("Dirección:", 10, 75);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`${orderData.userData.address}${orderData.userData.neighborhood}, ${orderData.userData.city}`, 55, 75);
-        
-            // **Configuración de la tabla con los productos**
-            const tableColumns = [
-                { header: 'Producto', dataKey: 'description' },
-                { header: 'Precio Unitario', dataKey: 'unitPrice' },
-                { header: 'Cantidad', dataKey: 'quantity' },
-                { header: 'Subtotal', dataKey: 'subtotal' },
-            ];
-        
-            const tableData = orderData.items.flatMap((item) => {
-                const price = isString(item.price) ? parseInt(item.price) : item.price
-
-                return {
-                description: `${item.product_name} (${item.quality} ${item.presentation})`,
-                unitPrice: formatPrice(price),
-                quantity: formatPrice(item.quantity),
-                subtotal: formatPrice(price * item.quantity)
-                };
-            });
-              
-            // **Renderizar la tabla**
-            doc.autoTable({
-                columns: tableColumns,
-                body: tableData,
-                startY: 80, // Comienza justo después de la dirección
-                styles: { fontSize: 10, halign: 'center' },
-            });
-        
-            // **Calcular posición final para totales**
-            const finalY = doc.lastAutoTable.finalY + 10;
-        
-            // **Agregar subtotales, envío y total al final**
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`Valor envio: (${percentageShippingCost * 100}%): $${formatPrice(amountShippingCost)}`, 10, finalY + 5);
-            doc.text(`Valor Productos: $${formatPrice(total)}`, 10, finalY);
-            doc.setFontSize(14);
-            doc.text(`Total Pedido: $${formatPrice(subtotal)}`, 10, finalY + 10);
-
-            doc.setTextColor(255, 0, 0);
-            doc.text(`Los pedidos pueden ser fluctuantes, por lo tanto pueden variar`, 10, finalY + 15);
-        
-            // Descargar el PDF
-            doc.save(`Orden_${orderData.order.id}.pdf`);
-        } catch (error) {
-            console.error("Error al generar el PDF:", error);
-        }
-    };
-
      const orderColumns = [
         { title: 'ID de Orden', dataIndex: 'id', key: 'id' },
         { title: 'Cliente', dataIndex: 'email', key: 'email' },
@@ -423,6 +322,8 @@ const Orders = () => {
                 };
                 return statusLabels[status] || 'Desconocido';
             },
+            sorter: (a, b) => a.status_id - b.status_id,
+            defaultSortOrder: 'ascend'
         },
         {
             title: 'Acciones',
@@ -455,7 +356,7 @@ const Orders = () => {
                     </Popconfirm>
                     <Button onClick={(e) => {
                         e.stopPropagation();
-                        fetchOrderDetailsAndGeneratePDF(order.id);
+                        generateOrderPDF(order.id);
                     }}>
                         Generar PDF
                     </Button>
@@ -506,7 +407,7 @@ const Orders = () => {
                 open={isModalVisible}
                 onCancel={handleCancel}
                 footer={[
-                    <Button key={1} onClick={() => fetchOrderDetailsAndGeneratePDF(selectedOrder.id)}>
+                    <Button key={1} onClick={() => generateOrderPDF(selectedOrder.id)}>
                         Generar PDF
                     </Button>,
                 ]}

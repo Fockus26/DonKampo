@@ -83,6 +83,7 @@ const Header = ({ setShowInstallPrompt, setForceShow }) => {
     localStorage.removeItem("loginData");
     localStorage.removeItem("cart");
     handleMenuClick("login");
+    window.location.reload();
   };
 
   return (

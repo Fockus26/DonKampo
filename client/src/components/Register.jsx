@@ -19,7 +19,6 @@ const Register = () => {
     navigate(-1); // Navega a la página anterior si el usuario cancela
   };
 
-
   const renderUserTypeSelection = () => {
   
     const categories = ['hogar', 'restaurante', 'supermercado', 'fruver'];
@@ -107,15 +106,15 @@ const Register = () => {
               <div className="form-row">
                 {/* Nombre */}
                 <Form.Item
-                  label={`Nombre ${userTypeSelected !== 'Hogar' ? 'de Empresa' : ''}`}
+                  label={`Nombre ${userTypeSelected !== 'hogar' ? 'de Empresa' : ''}`}
                   name="user_name"
                   rules={[{ required: true, message: `Por favor ingresa tu nombre ${userTypeSelected !== 'Hogar' ? 'de Empresa' : ''}` }]}
                 >
-                  <Input placeholder={`Nombre ${userTypeSelected !== 'Hogar' ? 'de Empresa' : ''}`} />
+                  <Input placeholder={`Nombre ${userTypeSelected !== 'hogar' ? 'de Empresa' : ''}`} />
                 </Form.Item>
 
                 {/* Apellido */}
-                { userTypeSelected === 'Hogar' &&
+                { userTypeSelected === 'hogar' &&
                   <Form.Item
                     label="Apellidos"
                     name="lastname"

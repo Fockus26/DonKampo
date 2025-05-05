@@ -32,6 +32,13 @@ const Checkout = () => {
 
   const [checkTerms, setCheckTerms] = useState(false);
 
+  const [form] = Form.useForm(); // Crear instancia del formulario
+
+  useEffect(() => {
+    // Inicializar el formulario con los valores de actualUser
+    form.setFieldsValue(actualUser);
+  }, [actualUser, form]);
+  
 
   useEffect(() => {
     getFetch('customer-types', '')
@@ -120,22 +127,17 @@ const Checkout = () => {
     }
   }, [navigate, total, loading]); 
 
-  const handleInputChange = e => {
-    const { name, value } = e.target;
-    setActualUser(prevData => ({ ...prevData, [name]: value }));
-  };
-
-  const handleUpdateUser = async () => {
+  const handleUpdateUser = async updatedUser => {
     if (userData) {
       try {
         const updatedData = {
-          user_name: userData.user_name,
-          lastname: userData.lastname,
-          email: userData.email,
-          phone: userData.phone,
-          city: userData.city,
-          address: userData.address,
-          neighborhood: userData.neighborhood,
+          user_name: updatedUser.user_name,
+          lastname: updatedUser.lastname || "",
+          email: updatedUser.email,
+          phone: updatedUser.phone,
+          city: updatedUser.city,
+          address: updatedUser.address,
+          neighborhood: updatedUser.neighborhood,
         };
 
         await axios.put(
@@ -143,6 +145,7 @@ const Checkout = () => {
           updatedData
         );
         message.success("Datos actualizados exitosamente.");
+        window.location.reload()
       } catch (error) {
         message.error("Error al actualizar los datos del usuario.");
         console.error(error);
@@ -369,91 +372,94 @@ const Checkout = () => {
       <div className="checkout-container">
         <h2>Finalizar Compra</h2>
         <div className="checkout-content">
-          { actualUser && (
-            <Form layout="vertical" className="checkout-form">
-              <Row gutter={16}>
-                <Col xs={24} sm={userType === 'home' ? 12 : 24}>
-                  <Form.Item label={`Nombre ${userType === 'home' ? '' : 'Comercial'}`}>
-                    <Input
-                      name="user_name"
-                      value={actualUser.user_name}
-                      onChange={handleInputChange}
-                    />
+          <Form
+            form={form}
+            layout="vertical"
+            className="checkout-form"
+            onFinish={handleUpdateUser} // Enviar los datos actualizados al hacer submit
+          >
+            <Row gutter={16}>
+              <Col xs={24} sm={userType === 'home' ? 12 : 24}>
+                <Form.Item
+                  label={`Nombre ${userType === 'home' ? '' : 'Comercial'}`}
+                  name="user_name" // Vincular con actualUser.user_name
+                  rules={[{ required: true, message: 'Por favor ingresa tu nombre' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              {userType === 'home' && (
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label="Apellido"
+                    name="lastname" // Vincular con actualUser.lastname
+                    rules={[{ required: true, message: 'Por favor ingresa tu apellido' }]}
+                  >
+                    <Input />
                   </Form.Item>
                 </Col>
-                { userType === 'home' && 
-                  <Col xs={24} sm={12}>
-                    <Form.Item label="Apellido">
-                      <Input
-                        name="lastname"
-                        value={actualUser.lastname}
-                        onChange={handleInputChange}
-                      />
-                    </Form.Item>
-                  </Col>
-                }
-                <Col xs={24} sm={12}>
-                  <Form.Item label="Email">
-                    <Input
-                      name="email"
-                      value={actualUser.email}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item label="Teléfono">
-                    <Input
-                      name="phone"
-                      value={actualUser.phone}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item label="Ciudad">
-                    <Select
-                      name="city"
-                      value={actualUser.city}
-                      onChange={(value) => handleInputChange({ target: { name: 'city', value } })}
-                    >
-                      <Select.Option value="Chía">Chía</Select.Option>
-                      <Select.Option value="Cajicá">Cajicá</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item label="Dirección">
-                    <Input
-                      name="address"
-                      value={actualUser.address}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item label="Barrio">
-                    <Input
-                      name="neighborhood"
-                      value={actualUser.neighborhood}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  { userData && (
-                    <Button
-                      type="primary"
-                      className="confirm-data-button"
-                      onClick={handleUpdateUser}
-                    >
-                      Confirmar Datos
-                    </Button>
-                  )}
-                </Col>
-              </Row>
-            </Form>
-          )}
+              )}
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label="Email"
+                  name="email" // Vincular con actualUser.email
+                  rules={[{ required: true, type: 'email', message: 'Por favor ingresa un email válido' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label="Teléfono"
+                  name="phone" // Vincular con actualUser.phone
+                  rules={[{ required: true, message: 'Por favor ingresa tu teléfono' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label="Ciudad"
+                  name="city" // Vincular con actualUser.city
+                  rules={[{ required: true, message: 'Por favor selecciona tu ciudad' }]}
+                >
+                  <Select>
+                    <Select.Option value="Chía">Chía</Select.Option>
+                    <Select.Option value="Cajicá">Cajicá</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label="Dirección"
+                  name="address" // Vincular con actualUser.address
+                  rules={[{ required: true, message: 'Por favor ingresa tu dirección' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label="Barrio"
+                  name="neighborhood" // Vincular con actualUser.neighborhood
+                  rules={[{ required: true, message: 'Por favor ingresa tu barrio' }]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12}>
+                {userData && (
+                  <Button
+                    type="primary"
+                    htmlType="submit" // Enviar el formulario al hacer clic
+                    className="confirm-data-button"
+                  >
+                    Confirmar Datos
+                  </Button>
+                )}
+              </Col>
+            </Row>
+          </Form>
           <div className="order-summary">
             <h3>Resumen del Pedido</h3>
             <Divider />
@@ -478,7 +484,7 @@ const Checkout = () => {
             <p>Subtotal: <span>${formatPrice(subtotal)}</span></p>
             <p>Envío ({percentageShippingCost * 100}%): <span>${formatPrice(amountShippingCost)}</span></p>
 
-            { userType === "restaurant" && (
+            { Object.keys(actualUser).length > 0 && (
               <>
                 <Form.Item label="¿Necesita factura electrónica?">
                   <Input

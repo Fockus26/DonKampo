@@ -132,12 +132,17 @@
 }
 .link-button-2 {
   color: #ee7723; /* Color principal */
+  border: 2px solid #fa8c16 !important;
+  padding: 5px 10px;
   font-weight: bold; /* Resaltar texto */
   border: none; /* Sin bordes */
   background: none; /* Sin fondo */
-  padding: 0; /* Sin padding */
   cursor: pointer;
   transition: color 0.3s;
+}
+.link-button-2:hover {
+  background-color: #ee7723 !important; /* Color de hover */
+  color: white !important;
 }
 
 .link-button:hover {

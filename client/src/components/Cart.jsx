@@ -149,7 +149,7 @@ const Cart = () => {
               <h3>Total del Carrito</h3>
               <Divider />
               <p>Subtotal: ${formatPrice(calculateSubtotal())}</p>
-              <p><strong>Total: ${formatPrice(total)}</strong></p>
+              {/* <p><strong>Total: ${formatPrice(total)}</strong></p> */}
               <Button
                 type="primary"
                 className="checkout-button"
