@@ -211,199 +211,202 @@ const Products = () => {
   return (
     <>
       <Header />
-      <article
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '8px',
-          backgroundColor: '#0fb83970',
-          borderRadius: '8px',
-          margin: '10px auto',
-          maxWidth: '1078px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          marginBottom: '5%'
-        }}
-      >
-        <Select
-          placeholder="Filtrar por categoría"
-          style={{ width: 200, marginRight: 16 }}
-          onChange={handleCategoryChange}
-          value={selectedCategory}
-          size="large"
+      <main>
+        <div className="background-home" />
+        <article
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '8px',
+            backgroundColor: '#0fb83970',
+            borderRadius: '8px',
+            margin: '10px auto',
+            maxWidth: '1078px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            marginBottom: '5%'
+          }}
         >
-          {categories.map((category) => (
-            
-            <Option key={category} value={category}>
-              {category}
-            </Option>
-          ))}
-        </Select>
-
-        <Input
-          placeholder="Buscar productos"
-          value={searchQuery}
-          onChange={e => handleSearchChange(e.target.value)}
-          style={{ width: 300 }}
-          allowClear
-          size="large"
-        />
-      </article>
-      { currentProducts.length ? 
-        <>
-          <div className="products-container">
-            {loading ? (
-              <p>Cargando productos...</p>
-            ) : (
-              <>
-                { currentProducts.map(product => {            
-                  const { name, category, description, product_id: id, photo_url: url, promocionar } = product
-
-                  return (
-                    <Card
-                      key={id}
-                      className={`product-card ${promocionar ? 'promo' : ''}`}
-                      hoverable
-                      onClick={() => openModal(product)}
-                      cover={
-                        <img
-                          alt={name}
-                          src={getBase64Image(url)}
-                          style={{
-                            objectFit: "cover",
-                            width: "100%",
-                            height: "250px",
-                          }}
-                        />
-                      }
-                    >
-                      <div className="product-info">
-                        <h3 className="product-name">{name}</h3>
-                        <p className="product-category">{category}</p>
-                        <p className="product-description">{description}</p>
-
-                        <Button type="primary" onClick={() => openModal(product)}>
-                          { userType === 'home' ? 'Agregar al carrito' : 'Ver detalles' }
-                        </Button> 
-                      </div>
-                    </Card>
-                  );
-                })}
-              </>
-            )}
-          </div>
-
-          {!loading && (
-            <Pagination
-              current={currentPage}
-              pageSize={itemsPerPage}
-              total={filteredProducts.length}
-              onChange={(page) => setCurrentPage(page)}
-              className="pagination"
-            />
-          )}
-        </>
-        : <span className="noAvailable">No existe el producto</span>
-      }
-
-      { currentProduct && 
-        <Modal
-          title={currentProduct.name}
-          open={isVisible}
-          onCancel={handleCancelModal}
-          footer={null}
-          width={400}
-        >
-          <img
-            alt={currentProduct.name}
-            src={getBase64Image(currentProduct.photo_url)}
-            style={{ width: "100%", height: "300px", objectFit: "cover" }}
-          />
-
-          {/* Calidad */}
           <Select
-            placeholder="Calidad"
-            style={{ width: "100%", marginBottom: "8px" }}
-            value={selectedVariations[currentProduct.product_id]?.quality}
-            onChange={ value => handleVariationChange(currentProduct.product_id, "quality", value) }
+            placeholder="Filtrar por categoría"
+            style={{ width: 200, marginRight: 16 }}
+            onChange={handleCategoryChange}
+            value={selectedCategory}
+            size="large"
           >
-            { currentProduct.variations.map(variation => (
-              <Option key={variation.variation_id} value={variation.quality}>
-                {variation.quality}
+            {categories.map((category) => (
+              
+              <Option key={category} value={category}>
+                {category}
               </Option>
             ))}
           </Select>
-          {/* Presentacion */}
-          <Select
-            disabled={!selectedVariations[currentProduct.product_id]?.quality}
-            placeholder="Presentacion"
-            style={{ width: "100%", marginBottom: "8px" }}
-            value={selectedVariations[currentProduct.product_id]?.presentation}
-            onChange={(value) =>
-              handleVariationChange(currentProduct.product_id, "presentation", value)
-            }
-          >
-            { selectedVariations[currentProduct.product_id]?.quality &&
-              currentProduct.variations 
-                .filter((variation) => (
-                  selectedVariations[currentProduct['product_id']].quality === variation.quality
-                ))[0].presentations.map((presentation, index) => (
-                  <Option key={index} value={presentation.presentation}>
-                    {presentation.presentation}
-                  </Option>
-                ))
-            }
-          </Select>
 
-          <div className="quantity-controls" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Button onClick={() => handleDecrement(currentProduct.product_id)}>-</Button>
-            <input
-              type="number"
-              value={quantities[currentProduct.product_id] || 1}
-              onChange={(e) => handleInputChange(currentProduct.product_id, e.target.value)}
-              style={{
-                width: "50px",
-                textAlign: "center",
-                border: "1px solid #d9d9d9",
-                borderRadius: "4px",
-                padding: "4px",
-              }}
-            />
-            <Button onClick={() => handleIncrement(currentProduct.product_id)}>+</Button>
-          </div>
+          <Input
+            placeholder="Buscar productos"
+            value={searchQuery}
+            onChange={e => handleSearchChange(e.target.value)}
+            style={{ width: 300 }}
+            allowClear
+            size="large"
+          />
+        </article>
+        { currentProducts.length ? 
+          <>
+            <div className="products-container">
+              {loading ? (
+                <p>Cargando productos...</p>
+              ) : (
+                <>
+                  { currentProducts.map(product => {            
+                    const { name, category, description, product_id: id, photo_url: url, promocionar } = product
 
-          <div className="product-price" style={{ marginTop: "8px", textAlign: "center" }}>
-            { selectedVariations[currentProduct.product_id]?.quality &&
-              selectedVariations[currentProduct.product_id]?.presentation ? (
-              <span>
-                Precio: $
-                {
-                  formatPrice(
-                    getPrice(
-                      currentProduct.variations
-                      .find(v => v.quality === selectedVariations[currentProduct.product_id]?.quality)
-                      .presentations.find(p => p.presentation === selectedVariations[currentProduct.product_id].presentation)
-                    ) * (quantities[currentProduct.product_id] || 1)
-                  )
-                }
-              </span>
-            ) : (
-              <span>Selecciona calidad y presentacion para ver el precio!</span>
+                    return (
+                      <Card
+                        key={id}
+                        className={`product-card ${promocionar ? 'promo' : ''}`}
+                        hoverable
+                        onClick={() => openModal(product)}
+                        cover={
+                          <img
+                            alt={name}
+                            src={getBase64Image(url)}
+                            style={{
+                              objectFit: "cover",
+                              width: "100%",
+                              height: "250px",
+                            }}
+                          />
+                        }
+                      >
+                        <div className="product-info">
+                          <h3 className="product-name">{name}</h3>
+                          <p className="product-category">{category}</p>
+                          <p className="product-description">{description}</p>
+
+                          <Button type="primary" onClick={() => openModal(product)}>
+                            { userType === 'home' ? 'Agregar al carrito' : 'Ver detalles' }
+                          </Button> 
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </>
+              )}
+            </div>
+
+            {!loading && (
+              <Pagination
+                current={currentPage}
+                pageSize={itemsPerPage}
+                total={filteredProducts.length}
+                onChange={(page) => setCurrentPage(page)}
+                className="pagination"
+              />
             )}
-          </div>
+          </>
+          : <span className="noAvailable">No existe el producto</span>
+        }
 
-          <Button
-            type="primary"
-            onClick={() => handleAddToCart(currentProduct)}
-            style={{ marginTop: "8px", width: "100%" }}
+        { currentProduct && 
+          <Modal
+            title={currentProduct.name}
+            open={isVisible}
+            onCancel={handleCancelModal}
+            footer={null}
+            width={400}
           >
-            Añadir al carrito
-          </Button>
-        </Modal>
-      }
+            <img
+              alt={currentProduct.name}
+              src={getBase64Image(currentProduct.photo_url)}
+              style={{ width: "100%", height: "300px", objectFit: "cover" }}
+            />
 
-      <FloatingButtons />
-      <CustomFooter />
+            {/* Calidad */}
+            <Select
+              placeholder="Calidad"
+              style={{ width: "100%", marginBottom: "8px" }}
+              value={selectedVariations[currentProduct.product_id]?.quality}
+              onChange={ value => handleVariationChange(currentProduct.product_id, "quality", value) }
+            >
+              { currentProduct.variations.map(variation => (
+                <Option key={variation.variation_id} value={variation.quality}>
+                  {variation.quality}
+                </Option>
+              ))}
+            </Select>
+            {/* Presentacion */}
+            <Select
+              disabled={!selectedVariations[currentProduct.product_id]?.quality}
+              placeholder="Presentacion"
+              style={{ width: "100%", marginBottom: "8px" }}
+              value={selectedVariations[currentProduct.product_id]?.presentation}
+              onChange={(value) =>
+                handleVariationChange(currentProduct.product_id, "presentation", value)
+              }
+            >
+              { selectedVariations[currentProduct.product_id]?.quality &&
+                currentProduct.variations 
+                  .filter((variation) => (
+                    selectedVariations[currentProduct['product_id']].quality === variation.quality
+                  ))[0].presentations.map((presentation, index) => (
+                    <Option key={index} value={presentation.presentation}>
+                      {presentation.presentation}
+                    </Option>
+                  ))
+              }
+            </Select>
+
+            <div className="quantity-controls" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Button onClick={() => handleDecrement(currentProduct.product_id)}>-</Button>
+              <input
+                type="number"
+                value={quantities[currentProduct.product_id] || 1}
+                onChange={(e) => handleInputChange(currentProduct.product_id, e.target.value)}
+                style={{
+                  width: "50px",
+                  textAlign: "center",
+                  border: "1px solid #d9d9d9",
+                  borderRadius: "4px",
+                  padding: "4px",
+                }}
+              />
+              <Button onClick={() => handleIncrement(currentProduct.product_id)}>+</Button>
+            </div>
+
+            <div className="product-price" style={{ marginTop: "8px", textAlign: "center" }}>
+              { selectedVariations[currentProduct.product_id]?.quality &&
+                selectedVariations[currentProduct.product_id]?.presentation ? (
+                <span>
+                  Precio: $
+                  {
+                    formatPrice(
+                      getPrice(
+                        currentProduct.variations
+                        .find(v => v.quality === selectedVariations[currentProduct.product_id]?.quality)
+                        .presentations.find(p => p.presentation === selectedVariations[currentProduct.product_id].presentation)
+                      ) * (quantities[currentProduct.product_id] || 1)
+                    )
+                  }
+                </span>
+              ) : (
+                <span>Selecciona calidad y presentacion para ver el precio!</span>
+              )}
+            </div>
+
+            <Button
+              type="primary"
+              onClick={() => handleAddToCart(currentProduct)}
+              style={{ marginTop: "8px", width: "100%" }}
+            >
+              Añadir al carrito
+            </Button>
+          </Modal>
+        }
+
+        <FloatingButtons />
+        <CustomFooter />
+      </main>
     </>
   );
 };

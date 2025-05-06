@@ -1,14 +1,5 @@
 main { position: relative; }
 
-.background-home {
-  background-image: url('../assets/fondo.jpg');
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: -10;
-  opacity: .25;
-}
-
 /* Estilo para el modal */
 
 .ant-modal-body img {

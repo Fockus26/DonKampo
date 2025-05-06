@@ -36,6 +36,7 @@ const Login = () => {
       const redirectTo = localStorage.getItem("redirectTo") || "/";
       navigate(redirectTo, { replace: true });
       localStorage.removeItem("redirectTo");
+      window.location.reload()
     } catch (error) {
       message.error("Email o contraseña incorrectos");
     } finally {
@@ -116,133 +117,137 @@ const Login = () => {
 
   return (
     <>
-      <img id="fruits" src={fruits} alt="" />
+      {/* <img id="fruits" src={fruits} alt="" /> */}
       <Header />
-      <div className="login-container">
-        <h2>Inicio de Sesión</h2>
-        <Form name="login_form" onFinish={onFinish} layout="vertical">
-          <Form.Item
-            label="Correo Electrónico"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Por favor ingresa tu correo electrónico",
-              },
-            ]}
-          >
-            <Input type="email" placeholder="Correo Electrónico" />
-          </Form.Item>
-
-          <Form.Item
-            label="Contraseña"
-            name="user_password"
-            rules={[
-              { required: true, message: "Por favor ingresa tu contraseña" },
-            ]}
-          >
-            <Input.Password placeholder="Contraseña" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading} block>
-              Iniciar Sesión
-            </Button>
-          </Form.Item>
-          <div
-            className="forgot-password"
-            onClick={() => setIsModalVisible(true)}
-          >
-            Olvidé mi contraseña
-          </div>
-        </Form>
-      </div>
-
-      <Modal
-        title="Recuperar Contraseña"
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-      >
-        <Form onFinish={handleForgotPassword} layout="vertical">
-          <Form.Item
-            label="Correo Electrónico"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Por favor ingresa tu correo electrónico",
-              },
-            ]}
-          >
-            <Input
-              type="email"
-              placeholder="Correo Electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={forgotPasswordLoading}
-              block
+      <main id='login'>
+        <div className="background-home"/>
+        <div className="login-container"> 
+          <h2>Inicio de Sesión</h2>
+          <Form name="login_form" onFinish={onFinish} layout="vertical">
+            <Form.Item
+              label="Correo Electrónico"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor ingresa tu correo electrónico",
+                },
+              ]}
             >
-              Enviar Solicitud
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+              <Input type="email" placeholder="Correo Electrónico" />
+            </Form.Item>
 
-      <Modal
-        title="Restablecer Contraseña"
-        open={isResetModalVisible}
-        onCancel={() => setIsResetModalVisible(false)}
-        footer={null}
-      >
-        <Form onFinish={handleResetPassword} layout="vertical">
-          <Form.Item
-            label="Código de Verificación"
-            name="code"
-            rules={[
-              {
-                required: true,
-                message: "Por favor ingresa el código enviado a tu correo",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Código de Verificación"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Nueva Contraseña"
-            name="newPassword"
-            rules={[
-              {
-                required: true,
-                message: "Por favor ingresa tu nueva contraseña",
-              },
-            ]}
-          >
-            <Input.Password
-              placeholder="Nueva Contraseña"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Restablecer Contraseña
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+            <Form.Item
+              label="Contraseña"
+              name="user_password"
+              rules={[
+                { required: true, message: "Por favor ingresa tu contraseña" },
+              ]}
+            >
+              <Input.Password placeholder="Contraseña" />
+            </Form.Item>
 
-      <FloatingButtons />
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={loading} block>
+                Iniciar Sesión
+              </Button>
+            </Form.Item>
+            <div
+              className="forgot-password"
+              onClick={() => setIsModalVisible(true)}
+            >
+              Olvidé mi contraseña
+            </div>
+          </Form>
+        </div>
+
+        <Modal
+          title="Recuperar Contraseña"
+          open={isModalVisible}
+          onCancel={() => setIsModalVisible(false)}
+          footer={null}
+        >
+          <Form onFinish={handleForgotPassword} layout="vertical">
+            <Form.Item
+              label="Correo Electrónico"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor ingresa tu correo electrónico",
+                },
+              ]}
+            >
+              <Input
+                type="email"
+                placeholder="Correo Electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={forgotPasswordLoading}
+                block
+              >
+                Enviar Solicitud
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        <Modal
+          title="Restablecer Contraseña"
+          open={isResetModalVisible}
+          onCancel={() => setIsResetModalVisible(false)}
+          footer={null}
+        >
+          <Form onFinish={handleResetPassword} layout="vertical">
+            <Form.Item
+              label="Código de Verificación"
+              name="code"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor ingresa el código enviado a tu correo",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Código de Verificación"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Nueva Contraseña"
+              name="newPassword"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor ingresa tu nueva contraseña",
+                },
+              ]}
+            >
+              <Input.Password
+                placeholder="Nueva Contraseña"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" block>
+                Restablecer Contraseña
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        <FloatingButtons />
+      </main>
+
       <CustomFooter />
     </>
   );

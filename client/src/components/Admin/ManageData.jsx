@@ -677,46 +677,49 @@ const ManageData = () => {
   return (
     <>
       <Header />
-      <section className="manage-products-container">
-        <Tabs defaultActiveKey="1" items={[
-          // Manage Products
-          {
-            key: "1",
-            label: "Gestión Productos",
-            children: <ManageProducts />,
-          },
-          // Create Product
-          {
-            key: "2",
-            label: "Creación Productos",
-            children: <CreateProduct />,
-          },
-          // Update Multiple Products
-          {
-            key: "3",
-            label: "Actualización Productos",
-            children: <UpdateMultipleProducts />,
-          },
-          // Update Order Prices
-          {
-            key: "4",
-            label: "Actualización Ordenes",
-            children: <UpdateOrderPrices />,
-          },
-          // Orders
-          {
-            key: "5",
-            label: "Ordenes",
-            children: <Orders />,
-          },
-          // Sales Report
-          {
-            key: "6",
-            label: "Ventas",
-            children: <SalesReport />,
-          }
-        ]} />
-      </section>
+      <main>
+        <div className="background-home" /> 
+        <section className="manage-products-container">
+          <Tabs defaultActiveKey="1" items={[
+            // Manage Products
+            {
+              key: "1",
+              label: "Gestión Productos",
+              children: <ManageProducts />,
+            },
+            // Create Product
+            {
+              key: "2",
+              label: "Creación Productos",
+              children: <CreateProduct />,
+            },
+            // Update Multiple Products
+            {
+              key: "3",
+              label: "Actualización Productos",
+              children: <UpdateMultipleProducts />,
+            },
+            // Update Order Prices
+            {
+              key: "4",
+              label: "Actualización Ordenes",
+              children: <UpdateOrderPrices />,
+            },
+            // Orders
+            {
+              key: "5",
+              label: "Ordenes",
+              children: <Orders />,
+            },
+            // Sales Report
+            {
+              key: "6",
+              label: "Ventas",
+              children: <SalesReport />,
+            }
+          ]} />
+        </section>
+      </main>
       <FloatingButtons />
       <CustomFooter />
     </>

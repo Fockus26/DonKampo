@@ -317,7 +317,6 @@ const Profile = () => {
 
     return (
       <Card title="Historial de Pedidos" className="user-orders-card">
-        <img id="fruits" src={fruits} alt="" />
         <div className="table-controls">
           <Input
             placeholder="Buscar por ID o Estado"
@@ -451,12 +450,15 @@ const Profile = () => {
   return (
     <>
       <Header />
-      <div className="user-profile-container">
-        {view === "welcome" && renderWelcome()}
-        {view === "profile" && renderProfile()}
-        {view === "orders" && renderOrdersTable()}
-        {actualOrder && renderOrderDetailsModal()}
-      </div>
+      <main>
+        <div className="background-home" /> 
+        <div className="user-profile-container">
+          {view === "welcome" && renderWelcome()}
+          {view === "profile" && renderProfile()}
+          {view === "orders" && renderOrdersTable()}
+          {actualOrder && renderOrderDetailsModal()}
+        </div>
+      </main>
       <FloatingButtons />
       <CustomFooter />
     </>

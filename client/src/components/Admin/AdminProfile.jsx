@@ -807,248 +807,26 @@ const AdminProfile = () => {
   return (
     <div>
       <Navbar />
-      <div className="admin-profile-container">
-        <h2>Bienvenido al Panel de Administración</h2>
-        <p>👤 Administra usuarios, 🚚 precios de envíos, 🛒 compras y 📢 publicidad. ¡Todo en un solo lugar! 🎯</p>
-        {renderUserTable()}
-        
-        {renderPurchaseTable()}
+      <main> 
+        <div className="background-home" /> 
+        <div className="admin-profile-container">
+          <h2>Bienvenido al Panel de Administración</h2>
+          <p>👤 Administra usuarios, 🚚 precios de envíos, 🛒 compras y 📢 publicidad. ¡Todo en un solo lugar! 🎯</p>
+          {renderUserTable()}
+          
+          {renderPurchaseTable()}
 
-        {/* Modal for User Details */}
-        <Modal
-          title="Detalles de Usuario"
-          open={isUserModalVisible}
-          onCancel={handleCancelUserModal} // Cambiar la función de cancelación
-          footer={null}
-        >
-          {selectedUser && (
-            <Form form={formUserDetail} onFinish={(values) => {
-              updateUserDetails(values);
-            }} layout="vertical">
-              <Form.Item
-                label="Nombre"
-                name="user_name"
-                rules={[
-                  { required: true, message: "Por favor ingresa el nombre" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Apellido"
-                name="lastname"
-                rules={[
-                  { required: true, message: "Por favor ingresa el apellido" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Por favor ingresa el correo electrónico",
-                  },
-                  {
-                    type: "email",
-                    message: "Ingresa un correo electrónico válido",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Teléfono"
-                name="phone"
-                rules={[
-                  { required: true, message: "Por favor ingresa el teléfono" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Ciudad"
-                name="city"
-                rules={[
-                  { required: true, message: "Por favor ingresa la ciudad" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Dirección"
-                name="address"
-                rules={[
-                  { required: true, message: "Por favor ingresa la dirección" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Barrio"
-                name="neighborhood"
-                rules={[
-                  { required: true, message: "Por favor ingresa el barrio" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Tipo de Usuario"
-                name="user_type"
-                rules={[
-                  {
-                    required: true,
-                    message: "Por favor selecciona el tipo de usuario",
-                  },
-                ]}
-              >
-                <Select>
-                  <Option value="admin">Administrador</Option>
-                  <Option value="hogar">Hogar</Option>
-                  <Option value="restaurante">Restaurante</Option>
-                  <Option value="supermercado">Supermercado</Option>
-                  <Option value="fruver">Fruver</Option>
-                </Select>
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit" block>
-                  Guardar Cambios
-                </Button>
-              </Form.Item>
-            </Form>
-          )}
-        </Modal>
-
-        <ManagePublicity />
-
-        {/* Costos Envio */}
-        <Form
-          form={formDelivery}
-          layout="vertical"
-          onFinish={updateShippingCosts} // Maneja la actualización de costos
-        >
-          <Card
-            title="Gestión de Costos de Envío"
-            bordered={true}
-            style={{
-              header: {
-                backgroundColor: "#00983a",
-                color: "#fff",
-                textAlign: "center"
-              },
-              body: {
-                padding: "20px",
-              },
-              width: "100%",
-              marginTop: "20px",
-              backgroundColor: "#f9f9f9",
-            }}
+          {/* Modal for User Details */}
+          <Modal
+            title="Detalles de Usuario"
+            open={isUserModalVisible}
+            onCancel={handleCancelUserModal} // Cambiar la función de cancelación
+            footer={null}
           >
-            <Row gutter={[16, 16]} style={{ textAlign: "center" }}>
-              {Object.keys(shippingCosts).map((type) => (
-                <Col span={6} key={type}>
-                  <Form.Item
-                    label={`Costo para ${
-                      type.charAt(0).toUpperCase() + type.slice(1)
-                    }`}
-                    name={type}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor ingresa el costo para ${type}`,
-                      },
-                    ]}
-                  >
-                    <Input type="number" step="0.01" />
-                  </Form.Item>
-                </Col>
-              ))}
-            </Row>
-            <div style={{ textAlign: "center", marginTop: "20px" }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loadingShipping}
-                style={{ backgroundColor: "#00983a", borderColor: "#007a2f" }}
-              >
-                Actualizar Costos
-              </Button>
-            </div>
-          </Card>
-        </Form>
-
-        <Modal
-          title="Detalles del Pedido"
-          open={isOrderModalVisible}
-          onCancel={() => setIsOrderModalVisible(false)}
-          footer={[
-            <Button key="close" onClick={() => setIsOrderModalVisible(false)}>
-              Cerrar
-            </Button>,
-          ]}
-        >
-          {selectedOrder && selectedOrder.order && (
-            <>
-              <h3>Información del Pedido</h3>
-              <p>
-                <strong>ID:</strong> {selectedOrder.order.id}
-              </p>
-              <p>
-                <strong>Cliente:</strong> {selectedOrder.order.customer_name}
-              </p>
-              <p>
-                <strong>Email:</strong> {selectedOrder.order.customer_email}
-              </p>
-              <p>
-                <strong>Fecha:</strong> {new Date(selectedOrder.order.order_date).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Fecha Entrega</strong> {new Date(new Date(selectedOrder.order.order_date).setDate(new Date(selectedOrder.order.order_date).getDate() + 1)).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Total:</strong> ${selectedOrder.order.total}
-              </p>
-              <p>
-                <strong>Estado:</strong>{" "}
-                {selectedOrder.order.status_id === 1
-                  ? "Pendiente"
-                  : selectedOrder.order.status_id === 2
-                  ? "Enviado"
-                  : selectedOrder.order.status_id === 3
-                  ? "Entregado"
-                  : "Cancelado"}
-              </p>
-              <Divider />
-
-              <h3>Ítems del Pedido</h3>
-              {selectedOrder.items.length > 0 ? (
-                <ul>
-                  {selectedOrder.items.map((item, index) => (
-                    <li key={index}>
-                      {item.product_name} - {item.quantity} x ${item.price}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No hay ítems en este pedido.</p>
-              )}
-            </>
-          )}
-        </Modal>
-
-        {/* Modal for Create User */}
-        <Modal
-          title="Crear Usuario"
-          open={isCreateUserModalVisible}
-          onCancel={() => setIsCreateUserModalVisible(false)}
-          footer={null}
-        >
-          <Form form={formCreateUser} onFinish={handleCreateUser} layout="vertical">
-            <Row gutter={16}>
-              <Col span={12}>
+            {selectedUser && (
+              <Form form={formUserDetail} onFinish={(values) => {
+                updateUserDetails(values);
+              }} layout="vertical">
                 <Form.Item
                   label="Nombre"
                   name="user_name"
@@ -1056,28 +834,19 @@ const AdminProfile = () => {
                     { required: true, message: "Por favor ingresa el nombre" },
                   ]}
                 >
-                  <Input placeholder="Nombre" />
+                  <Input />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
                 <Form.Item
                   label="Apellido"
                   name="lastname"
                   rules={[
-                    {
-                      required: true,
-                      message: "Por favor ingresa el apellido",
-                    },
+                    { required: true, message: "Por favor ingresa el apellido" },
                   ]}
                 >
-                  <Input placeholder="Apellido" />
+                  <Input />
                 </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
                 <Form.Item
-                  label="Correo Electrónico"
+                  label="Email"
                   name="email"
                   rules={[
                     {
@@ -1090,87 +859,321 @@ const AdminProfile = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Correo Electrónico" />
+                  <Input />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
                 <Form.Item
                   label="Teléfono"
                   name="phone"
                   rules={[
-                    {
-                      required: true,
-                      message: "Por favor ingresa el número de teléfono",
-                    },
+                    { required: true, message: "Por favor ingresa el teléfono" },
                   ]}
                 >
-                  <Input placeholder="Teléfono" />
+                  <Input />
                 </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
                 <Form.Item
                   label="Ciudad"
                   name="city"
                   rules={[
-                    {
-                      required: true,
-                      message: "Por favor selecciona la ciudad",
-                    },
+                    { required: true, message: "Por favor ingresa la ciudad" },
                   ]}
                 >
-                  <Select placeholder="Selecciona una ciudad">
-                    <Option value="Chía">Chía</Option>
-                    <Option value="Cajicá">Cajicá</Option>
-                  </Select>
+                  <Input />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
                 <Form.Item
-                  label="Contraseña"
-                  name="user_password"
+                  label="Dirección"
+                  name="address"
+                  rules={[
+                    { required: true, message: "Por favor ingresa la dirección" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="Barrio"
+                  name="neighborhood"
+                  rules={[
+                    { required: true, message: "Por favor ingresa el barrio" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="Tipo de Usuario"
+                  name="user_type"
                   rules={[
                     {
                       required: true,
-                      message: "Por favor ingresa una contraseña",
-                    },
-                    {
-                      min: 6,
-                      message: "La contraseña debe tener al menos 6 caracteres",
+                      message: "Por favor selecciona el tipo de usuario",
                     },
                   ]}
                 >
-                  <Input.Password placeholder="Contraseña" />
+                  <Select>
+                    <Option value="admin">Administrador</Option>
+                    <Option value="hogar">Hogar</Option>
+                    <Option value="restaurante">Restaurante</Option>
+                    <Option value="supermercado">Supermercado</Option>
+                    <Option value="fruver">Fruver</Option>
+                  </Select>
                 </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item
-              label="Tipo de Usuario"
-              name="user_type"
-              rules={[
-                {
-                  required: true,
-                  message: "Por favor selecciona el tipo de usuario",
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block>
+                    Guardar Cambios
+                  </Button>
+                </Form.Item>
+              </Form>
+            )}
+          </Modal>
+
+          <ManagePublicity />
+
+          {/* Costos Envio */}
+          <Form
+            form={formDelivery}
+            layout="vertical"
+            onFinish={updateShippingCosts} // Maneja la actualización de costos
+          >
+            <Card
+              title="Gestión de Costos de Envío"
+              bordered={true}
+              style={{
+                header: {
+                  backgroundColor: "#00983a",
+                  color: "#fff",
+                  textAlign: "center"
                 },
-              ]}
+                body: {
+                  padding: "20px",
+                },
+                width: "100%",
+                marginTop: "20px",
+                backgroundColor: "#f9f9f9",
+              }}
             >
-              <Select placeholder="Selecciona un tipo de usuario">
-                <Option value="admin">Administrador</Option>
-                <Option value="hogar">Hogar</Option>
-                <Option value="restaurante">Restaurante</Option>
-                <Option value="supermercado">Supermercado</Option>
-                <Option value="fruver">Fruver</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading} block>
-                Crear Usuario
-              </Button>
-            </Form.Item>
+              <Row gutter={[16, 16]} style={{ textAlign: "center" }}>
+                {Object.keys(shippingCosts).map((type) => (
+                  <Col span={6} key={type}>
+                    <Form.Item
+                      label={`Costo para ${
+                        type.charAt(0).toUpperCase() + type.slice(1)
+                      }`}
+                      name={type}
+                      rules={[
+                        {
+                          required: true,
+                          message: `Por favor ingresa el costo para ${type}`,
+                        },
+                      ]}
+                    >
+                      <Input type="number" step="0.01" />
+                    </Form.Item>
+                  </Col>
+                ))}
+              </Row>
+              <div style={{ textAlign: "center", marginTop: "20px" }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loadingShipping}
+                  style={{ backgroundColor: "#00983a", borderColor: "#007a2f" }}
+                >
+                  Actualizar Costos
+                </Button>
+              </div>
+            </Card>
           </Form>
-        </Modal>
-      </div>
+
+          <Modal
+            title="Detalles del Pedido"
+            open={isOrderModalVisible}
+            onCancel={() => setIsOrderModalVisible(false)}
+            footer={[
+              <Button key="close" onClick={() => setIsOrderModalVisible(false)}>
+                Cerrar
+              </Button>,
+            ]}
+          >
+            {selectedOrder && selectedOrder.order && (
+              <>
+                <h3>Información del Pedido</h3>
+                <p>
+                  <strong>ID:</strong> {selectedOrder.order.id}
+                </p>
+                <p>
+                  <strong>Cliente:</strong> {selectedOrder.order.customer_name}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedOrder.order.customer_email}
+                </p>
+                <p>
+                  <strong>Fecha:</strong> {new Date(selectedOrder.order.order_date).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Fecha Entrega</strong> {new Date(new Date(selectedOrder.order.order_date).setDate(new Date(selectedOrder.order.order_date).getDate() + 1)).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Total:</strong> ${selectedOrder.order.total}
+                </p>
+                <p>
+                  <strong>Estado:</strong>{" "}
+                  {selectedOrder.order.status_id === 1
+                    ? "Pendiente"
+                    : selectedOrder.order.status_id === 2
+                    ? "Enviado"
+                    : selectedOrder.order.status_id === 3
+                    ? "Entregado"
+                    : "Cancelado"}
+                </p>
+                <Divider />
+
+                <h3>Ítems del Pedido</h3>
+                {selectedOrder.items.length > 0 ? (
+                  <ul>
+                    {selectedOrder.items.map((item, index) => (
+                      <li key={index}>
+                        {item.product_name} - {item.quantity} x ${item.price}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No hay ítems en este pedido.</p>
+                )}
+              </>
+            )}
+          </Modal>
+
+          {/* Modal for Create User */}
+          <Modal
+            title="Crear Usuario"
+            open={isCreateUserModalVisible}
+            onCancel={() => setIsCreateUserModalVisible(false)}
+            footer={null}
+          >
+            <Form form={formCreateUser} onFinish={handleCreateUser} layout="vertical">
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Nombre"
+                    name="user_name"
+                    rules={[
+                      { required: true, message: "Por favor ingresa el nombre" },
+                    ]}
+                  >
+                    <Input placeholder="Nombre" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Apellido"
+                    name="lastname"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Por favor ingresa el apellido",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Apellido" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Correo Electrónico"
+                    name="email"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Por favor ingresa el correo electrónico",
+                      },
+                      {
+                        type: "email",
+                        message: "Ingresa un correo electrónico válido",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Correo Electrónico" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Teléfono"
+                    name="phone"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Por favor ingresa el número de teléfono",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Teléfono" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Ciudad"
+                    name="city"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Por favor selecciona la ciudad",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Selecciona una ciudad">
+                      <Option value="Chía">Chía</Option>
+                      <Option value="Cajicá">Cajicá</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Contraseña"
+                    name="user_password"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Por favor ingresa una contraseña",
+                      },
+                      {
+                        min: 6,
+                        message: "La contraseña debe tener al menos 6 caracteres",
+                      },
+                    ]}
+                  >
+                    <Input.Password placeholder="Contraseña" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item
+                label="Tipo de Usuario"
+                name="user_type"
+                rules={[
+                  {
+                    required: true,
+                    message: "Por favor selecciona el tipo de usuario",
+                  },
+                ]}
+              >
+                <Select placeholder="Selecciona un tipo de usuario">
+                  <Option value="admin">Administrador</Option>
+                  <Option value="hogar">Hogar</Option>
+                  <Option value="restaurante">Restaurante</Option>
+                  <Option value="supermercado">Supermercado</Option>
+                  <Option value="fruver">Fruver</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" loading={loading} block>
+                  Crear Usuario
+                </Button>
+              </Form.Item>
+            </Form>
+          </Modal>
+        </div>
+      </main>
       <FloatingButtons />
       <CustomFooter />
     </div>

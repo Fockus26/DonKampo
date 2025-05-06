@@ -72,6 +72,7 @@ const ManagePublicity = () => {
       setIsLoading(true);
 
       const productId = newAd.related_product_id
+      console.log(newAd)
 
       // Obtener el producto
       const product = await getFetch('getproduct/' + productId, '');      

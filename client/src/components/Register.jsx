@@ -91,9 +91,9 @@ const Register = () => {
 
   return (
     <>
+    <div className="background-home" style={{height: '100vh'}} />
       { userTypeSelected.length ? (
         <>
-          <img id="fruits" src={fruits} alt="" />
           <Header />
           <div className="register-container">
             <h2>Registro de Usuario</h2>

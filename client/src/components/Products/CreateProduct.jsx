@@ -72,10 +72,10 @@ const CreateProduct = () => {
           // Agregar nueva presentación
           variationPresentation.push({
             presentation: newValue,
-            price_fruver: 0,
-            price_home: 0,
-            price_restaurant: 0,
-            price_supermarket: 0,
+            price_fruver: null,
+            price_home: null,
+            price_restaurant: null,
+            price_supermarket: null,
           });
         }
       } else {

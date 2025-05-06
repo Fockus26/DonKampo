@@ -367,234 +367,237 @@ const Checkout = () => {
 
   return (
     <div>
-      <img id="fruits" src={fruits} alt="" />
       <Header />
-      <div className="checkout-container">
-        <h2>Finalizar Compra</h2>
-        <div className="checkout-content">
-          <Form
-            form={form}
-            layout="vertical"
-            className="checkout-form"
-            onFinish={handleUpdateUser} // Enviar los datos actualizados al hacer submit
-          >
-            <Row gutter={16}>
-              <Col xs={24} sm={userType === 'home' ? 12 : 24}>
-                <Form.Item
-                  label={`Nombre ${userType === 'home' ? '' : 'Comercial'}`}
-                  name="user_name" // Vincular con actualUser.user_name
-                  rules={[{ required: true, message: 'Por favor ingresa tu nombre' }]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              {userType === 'home' && (
-                <Col xs={24} sm={12}>
+      <main>
+        <div className="background-home" />   
+        <div className="checkout-container">
+
+          <h2>Finalizar Compra</h2>
+          <div className="checkout-content">
+            <Form
+              form={form}
+              layout="vertical"
+              className="checkout-form"
+              onFinish={handleUpdateUser} // Enviar los datos actualizados al hacer submit
+            >
+              <Row gutter={16}>
+                <Col xs={24} sm={userType === 'home' ? 12 : 24}>
                   <Form.Item
-                    label="Apellido"
-                    name="lastname" // Vincular con actualUser.lastname
-                    rules={[{ required: true, message: 'Por favor ingresa tu apellido' }]}
+                    label={`Nombre ${userType === 'home' ? '' : 'Comercial'}`}
+                    name="user_name" // Vincular con actualUser.user_name
+                    rules={[{ required: true, message: 'Por favor ingresa tu nombre' }]}
                   >
                     <Input />
                   </Form.Item>
                 </Col>
-              )}
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  label="Email"
-                  name="email" // Vincular con actualUser.email
-                  rules={[{ required: true, type: 'email', message: 'Por favor ingresa un email válido' }]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  label="Teléfono"
-                  name="phone" // Vincular con actualUser.phone
-                  rules={[{ required: true, message: 'Por favor ingresa tu teléfono' }]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  label="Ciudad"
-                  name="city" // Vincular con actualUser.city
-                  rules={[{ required: true, message: 'Por favor selecciona tu ciudad' }]}
-                >
-                  <Select>
-                    <Select.Option value="Chía">Chía</Select.Option>
-                    <Select.Option value="Cajicá">Cajicá</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  label="Dirección"
-                  name="address" // Vincular con actualUser.address
-                  rules={[{ required: true, message: 'Por favor ingresa tu dirección' }]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  label="Barrio"
-                  name="neighborhood" // Vincular con actualUser.neighborhood
-                  rules={[{ required: true, message: 'Por favor ingresa tu barrio' }]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                {userData && (
-                  <Button
-                    type="primary"
-                    htmlType="submit" // Enviar el formulario al hacer clic
-                    className="confirm-data-button"
+                {userType === 'home' && (
+                  <Col xs={24} sm={12}>
+                    <Form.Item
+                      label="Apellido"
+                      name="lastname" // Vincular con actualUser.lastname
+                      rules={[{ required: true, message: 'Por favor ingresa tu apellido' }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                )}
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label="Email"
+                    name="email" // Vincular con actualUser.email
+                    rules={[{ required: true, type: 'email', message: 'Por favor ingresa un email válido' }]}
                   >
-                    Confirmar Datos
-                  </Button>
-                )}
-              </Col>
-            </Row>
-          </Form>
-          <div className="order-summary">
-            <h3>Resumen del Pedido</h3>
-            <Divider />
-            { cartDetails.map(product => {
-              const { product_id: id, name, selectedVariation: variation } = product
-              const { presentation, quality, quantity } = variation
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label="Teléfono"
+                    name="phone" // Vincular con actualUser.phone
+                    rules={[{ required: true, message: 'Por favor ingresa tu teléfono' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label="Ciudad"
+                    name="city" // Vincular con actualUser.city
+                    rules={[{ required: true, message: 'Por favor selecciona tu ciudad' }]}
+                  >
+                    <Select>
+                      <Select.Option value="Chía">Chía</Select.Option>
+                      <Select.Option value="Cajicá">Cajicá</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label="Dirección"
+                    name="address" // Vincular con actualUser.address
+                    rules={[{ required: true, message: 'Por favor ingresa tu dirección' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label="Barrio"
+                    name="neighborhood" // Vincular con actualUser.neighborhood
+                    rules={[{ required: true, message: 'Por favor ingresa tu barrio' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  {userData && (
+                    <Button
+                      type="primary"
+                      htmlType="submit" // Enviar el formulario al hacer clic
+                      className="confirm-data-button"
+                    >
+                      Confirmar Datos
+                    </Button>
+                  )}
+                </Col>
+              </Row>
+            </Form>
+            <div className="order-summary">
+              <h3>Resumen del Pedido</h3>
+              <Divider />
+              { cartDetails.map(product => {
+                const { product_id: id, name, selectedVariation: variation } = product
+                const { presentation, quality, quantity } = variation
 
-              return (
-                <div key={id} className="order-summary-item">
-                  <span>{name} ({quality} -{" "} {presentation}) x {formatPrice(quantity)}</span>
-                  <div className="quantity-controls">
-                    <Button onClick={() => removeFromCart({product})}>-</Button>
-                    <span className="quantity-text">{formatPrice(quantity)}</span>
-                    <Button onClick={() => handleAddToCart(product)}>+</Button>
-                  </div>
-                  <span>${formatPrice(getPrice(variation) * quantity)}</span>
-                </div>
-              )
-            })}
-
-            <Divider />
-            <p>Subtotal: <span>${formatPrice(subtotal)}</span></p>
-            <p>Envío ({percentageShippingCost * 100}%): <span>${formatPrice(amountShippingCost)}</span></p>
-
-            { Object.keys(actualUser).length > 0 && (
-              <>
-                <Form.Item label="¿Necesita factura electrónica?">
-                  <Input
-                    type="checkbox"
-                    checked={needsElectronicInvoice}
-                    onChange={e => setNeedsElectronicInvoice(e.target.checked)}
-                  />
-                </Form.Item>
-                { needsElectronicInvoice && (
-                  <>
-                    <Form.Item label="Nombre de la empresa">
-                      <Input value={companyName} onChange={e => setCompanyName(e.target.value)} />
-                    </Form.Item>
-                    <Form.Item label="NIT de la empresa">
-                      <Input value={companyNit} onChange={e => setCompanyNit(e.target.value)} />
-                    </Form.Item>
-                  </>
-                )}
-              </>
-            )}
-
-            <Divider />
-            <h4>Total: <span>${formatPrice(total)}</span></h4>
-            <Divider />
-            
-            <h5 style={{ 
-              backgroundColor: '#ffdddd',
-              color: '#d8000c',
-              border: '1px solid #d8000c',
-              padding: '10px',
-              borderRadius: '5px',
-              fontWeight: 'bold',  
-            }}>
-              Recuerde que los precios son fluctuantes, por lo tanto pueden variar
-            </h5>
-            <Divider />
-
-            <Checkbox onChange={e => setCheckTerms(e.target.checked)}>
-              Acepto los <a href="/terms" target="_blank">términos y condiciones</a>
-            </Checkbox>
-
-            <Button
-              type="primary"
-              className="place-order-button"
-              onClick={handlePlaceOrder}
-              disabled={!validateForm()}
-            >
-              REALIZAR EL PEDIDO
-            </Button>
-
-            <Modal
-              title="Pedido Confirmado"
-              open={isModalVisible}
-              onOk={() => {
-                setIsModalVisible(false);
-                navigate("/products");
-              }}
-              onCancel={() => finishOrder("Productos Enviados Correctamente")}
-              footer={[
-                <Button
-                  key="pdf"
-                  type="default"
-                  onClick={generateOrderPDF}
-                  style={{ backgroundColor: "#FF914D", color: "#fff" }}
-                >
-                  Descargar PDF
-                </Button>
-
-              ]}
-            >
-              <div id="order-summary-pdf">
-                <p style={{ 
-                  backgroundColor: '#ffdddd',
-                  color: '#d8000c',
-                  border: '1px solid #d8000c',
-                  padding: '10px',
-                  borderRadius: '5px',
-                  fontWeight: 'bold',  
-                 }}>
-                  Recuerde que los precios son fluctuantes, por lo tanto pueden variar
-                </p>
-                <p>
-                  ¡{actualUser.user_name}, tu pedido ha sido realizado
-                  exitosamente!<br />Sera despachado {new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
-                </p>
-                <p>
-                  ID de la orden: <strong>{orderId}</strong>
-                </p>
-                <Divider />
-                <h4>Resumen del Pedido</h4>
-                { cartDetails.map(product => {
-                  const { product_id: id, name, selectedVariation: variation } = product
-                  const { quantity, presentation, quality } = variation
-                  
-                  return (
-                    <div key={id} className="order-summary-item">
-                      <span>{name} ({quality} -{" "}{presentation}) x {formatPrice(quantity)}</span>
-                      <span>${formatPrice(getPrice(variation) * quantity)}</span>
+                return (
+                  <div key={id} className="order-summary-item">
+                    <span>{name} ({quality} -{" "} {presentation}) x {formatPrice(quantity)}</span>
+                    <div className="quantity-controls">
+                      <Button onClick={() => removeFromCart({product})}>-</Button>
+                      <span className="quantity-text">{formatPrice(quantity)}</span>
+                      <Button onClick={() => handleAddToCart(product)}>+</Button>
                     </div>
-                  )
-                })}
-                <Divider />
-                <p>Subtotal: ${formatPrice(subtotal)}</p>
-                <p>Envío ({percentageShippingCost * 100}%): ${formatPrice(amountShippingCost)}</p>
-                <h4>Total: ${formatPrice(total)}</h4>
-              </div>
-            </Modal>
+                    <span>${formatPrice(getPrice(variation) * quantity)}</span>
+                  </div>
+                )
+              })}
+
+              <Divider />
+              <p>Subtotal: <span>${formatPrice(subtotal)}</span></p>
+              <p>Envío ({percentageShippingCost * 100}%): <span>${formatPrice(amountShippingCost)}</span></p>
+
+              { Object.keys(actualUser).length > 0 && (
+                <>
+                  <Form.Item label="¿Necesita factura electrónica?">
+                    <Input
+                      type="checkbox"
+                      checked={needsElectronicInvoice}
+                      onChange={e => setNeedsElectronicInvoice(e.target.checked)}
+                    />
+                  </Form.Item>
+                  { needsElectronicInvoice && (
+                    <>
+                      <Form.Item label="Nombre de la empresa">
+                        <Input value={companyName} onChange={e => setCompanyName(e.target.value)} />
+                      </Form.Item>
+                      <Form.Item label="NIT de la empresa">
+                        <Input value={companyNit} onChange={e => setCompanyNit(e.target.value)} />
+                      </Form.Item>
+                    </>
+                  )}
+                </>
+              )}
+
+              <Divider />
+              <h4>Total: <span>${formatPrice(total)}</span></h4>
+              <Divider />
+              
+              <h5 style={{ 
+                backgroundColor: '#ffdddd',
+                color: '#d8000c',
+                border: '1px solid #d8000c',
+                padding: '10px',
+                borderRadius: '5px',
+                fontWeight: 'bold',  
+              }}>
+                Recuerde que los precios son fluctuantes, por lo tanto pueden variar
+              </h5>
+              <Divider />
+
+              <Checkbox onChange={e => setCheckTerms(e.target.checked)}>
+                Acepto los <a href="/terms" target="_blank">términos y condiciones</a>
+              </Checkbox>
+
+              <Button
+                type="primary"
+                className="place-order-button"
+                onClick={handlePlaceOrder}
+                disabled={!validateForm()}
+              >
+                REALIZAR EL PEDIDO
+              </Button>
+
+              <Modal
+                title="Pedido Confirmado"
+                open={isModalVisible}
+                onOk={() => {
+                  setIsModalVisible(false);
+                  navigate("/products");
+                }}
+                onCancel={() => finishOrder("Productos Enviados Correctamente")}
+                footer={[
+                  <Button
+                    key="pdf"
+                    type="default"
+                    onClick={generateOrderPDF}
+                    style={{ backgroundColor: "#FF914D", color: "#fff" }}
+                  >
+                    Descargar PDF
+                  </Button>
+
+                ]}
+              >
+                <div id="order-summary-pdf">
+                  <p style={{ 
+                    backgroundColor: '#ffdddd',
+                    color: '#d8000c',
+                    border: '1px solid #d8000c',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    fontWeight: 'bold',  
+                  }}>
+                    Recuerde que los precios son fluctuantes, por lo tanto pueden variar
+                  </p>
+                  <p>
+                    ¡{actualUser.user_name}, tu pedido ha sido realizado
+                    exitosamente!<br />Sera despachado {new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                  <p>
+                    ID de la orden: <strong>{orderId}</strong>
+                  </p>
+                  <Divider />
+                  <h4>Resumen del Pedido</h4>
+                  { cartDetails.map(product => {
+                    const { product_id: id, name, selectedVariation: variation } = product
+                    const { quantity, presentation, quality } = variation
+                    
+                    return (
+                      <div key={id} className="order-summary-item">
+                        <span>{name} ({quality} -{" "}{presentation}) x {formatPrice(quantity)}</span>
+                        <span>${formatPrice(getPrice(variation) * quantity)}</span>
+                      </div>
+                    )
+                  })}
+                  <Divider />
+                  <p>Subtotal: ${formatPrice(subtotal)}</p>
+                  <p>Envío ({percentageShippingCost * 100}%): ${formatPrice(amountShippingCost)}</p>
+                  <h4>Total: ${formatPrice(total)}</h4>
+                </div>
+              </Modal>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
       <FloatingButtons />
       <CustomFooter />
     </div>
