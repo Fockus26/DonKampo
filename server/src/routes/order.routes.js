@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { placeOrder, getOrders, getOrdersById, createOrders, updateOrders, deleteOrders, updateOrderStatus, updateOrderPrices } from '../controllers/orders.controller.js';
+import { placeOrder, getOrders, getOrdersById, createOrders, updateOrders, deleteOrders, updateOrderStatus, updateOrderPrices, updateBulkOrders } from '../controllers/orders.controller.js';
 
 const router = Router();
 
@@ -12,5 +12,6 @@ router.put('/api/orders/updatePrices', updateOrderPrices)
 router.delete('/api/deleteorders/:orderId', deleteOrders);
 router.put('/api/updatestatus/:id/:status_id', updateOrderStatus);
 router.put('/api/orders/updatePrices', updateOrderPrices);
+router.put('/api/update-bulk-orders', updateBulkOrders)
 
 export default router;

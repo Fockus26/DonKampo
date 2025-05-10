@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, Button, Select, Popconfirm, Spin, message, Card, DatePicker, Modal, Alert, notification } from 'antd';
+import { 
+  Table, 
+  Button, 
+  Select, 
+  Popconfirm, 
+  Spin, 
+  message, 
+  Card, 
+  DatePicker, 
+  Modal, 
+  Alert, 
+  Checkbox,
+  notification
+} from 'antd';
 import * as XLSX from 'xlsx';
 import "css/Orders.css";
 
@@ -19,19 +32,21 @@ const Orders = () => {
     const [dateRange, setDateRange] = useState([null, null]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [orderDetails, setOrderDetails] = useState(null);
-    const [shippingPercentage, setShippingPercentage] = useState(null); // Estado para almacenar el porcentaje de envío
+    const [shippingPercentage, setShippingPercentage] = useState(null);
+    const [selectedOrders, setSelectedOrders] = useState([]);
+    const [isBulkModalVisible, setIsBulkModalVisible] = useState(false);
+    const [selectedStatus, setSelectedStatus] = useState(null);
 
     useEffect(() => {
         if (isModalVisible) fetchShippingCosts()
-        else setShippingPercentage(null) // Limpiar el porcentaje de envío si el modal no está visible
+        else setShippingPercentage(null)
     }, [isModalVisible]);
 
     const fetchOrders = async () => {
         setLoading(true)
         try {
-            const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/orders");
+            const response = await axios.get("http://localhost:8080/api/orders");
 
-            // Procesar datos de órdenes
             const dataOrders = response.data.map(item => {
                 const total = formatPrice(item.items.reduce((acc, item) => acc + item.price * item.quantity, 0))
                 return {
@@ -41,8 +56,8 @@ const Orders = () => {
                 }
             });
 
-            setOrders(dataOrders); // Establecer órdenes procesadas
-            setFilteredOrders(dataOrders); // Inicialmente, mostrar todas las órdenes
+            setOrders(dataOrders);
+            setFilteredOrders(dataOrders);
             setLoading(false)
         } catch (error) {
             message.error("Error al cargar los pedidos.");
@@ -51,12 +66,9 @@ const Orders = () => {
     };
 
     const fetchShippingCosts = async () => {
-        // Llamar a la API para obtener los tipos de cliente y costos de envío
-        const customerTypeResponse = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/customer-types");
-  
+        const customerTypeResponse = await axios.get("http://localhost:8080/api/customer-types");
         const shippingPercentage = getShippingCost(customerTypeResponse.data)
-
-        setShippingPercentage(shippingPercentage); // Almacenar el porcentaje de envío en el estado
+        setShippingPercentage(shippingPercentage);
     }
 
     useEffect(() => {
@@ -79,7 +91,7 @@ const Orders = () => {
     }, [statusFilter, dateRange, orders]);
 
     const handleStatusFilterChange = (value) => {
-        setStatusFilter(value); // Actualiza el estado del filtro
+        setStatusFilter(value);
     };
 
     const handleDateRangeChange = (dates) => {
@@ -91,8 +103,8 @@ const Orders = () => {
         setIsModalVisible(true);
 
         try {
-            const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${order.id}`);
-            setOrderDetails(response.data); // Almacenar los detalles de la orden
+            const response = await axios.get(`http://localhost:8080/api/orders/${order.id}`);
+            setOrderDetails(response.data);
         } catch (error) {
             message.error("Error al cargar los detalles de la orden.");
             console.error(error);
@@ -103,9 +115,48 @@ const Orders = () => {
         setIsModalVisible(false);
     };
 
-    const renderModalContent = () => {
+    const rowSelection = {
+        selectedRowKeys: selectedOrders,
+        onChange: (selectedRowKeys) => {
+            setSelectedOrders(selectedRowKeys);
+        },
+    };
 
-        if (!orderDetails) return <Spin spinning={true} />;; // Si no hay detalles de la orden, no renderizar nada
+  const handleBulkUpdate = async () => {
+    if (!selectedStatus) {
+        message.error('Por favor selecciona un estado');
+        return;
+    }
+
+    try {
+        setLoading(true);
+        await axios.put('http://localhost:8080/api/update-bulk-orders', {
+            orderIds: selectedOrders,
+            newStatus: selectedStatus
+        });
+        
+        // Actualizar el estado local sin necesidad de recargar toda la página
+        setOrders(prevOrders => prevOrders.map(order => {
+            if (selectedOrders.includes(order.id)) {
+                return { ...order, status_id: selectedStatus };
+            }
+            return order;
+        }));
+        
+        message.success(`Actualizadas ${selectedOrders.length} órdenes correctamente`);
+        setSelectedOrders([]);
+        setIsBulkModalVisible(false);
+        setSelectedStatus(null);
+    } catch (error) {
+        message.error('Error al actualizar órdenes');
+        console.error(error);
+    } finally {
+        setLoading(false);
+    }
+};
+
+    const renderModalContent = () => {
+        if (!orderDetails) return <Spin spinning={true} />;
 
         const { order, items, userData } = orderDetails;
         const { id, status_id, order_date, requires_electronic_billing } = order;
@@ -113,7 +164,6 @@ const Orders = () => {
 
         const subtotal = items.reduce((prev, curr) => (curr.price * curr.quantity) + prev, 0)
 
-        // Verificar si shippingPercentage ya está disponible
         if (!shippingPercentage) {
             return <Spin spinning={true} />;
         }
@@ -152,7 +202,6 @@ const Orders = () => {
                     <tbody>
                         {items.map((item, index) => {
                             const { price, quantity, product_name, quality, presentation } = item
-
                             const unitPrice = parseInt(price)
                             const total = formatPrice(quantity * unitPrice);
 
@@ -176,30 +225,28 @@ const Orders = () => {
                         marginTop: '16px',
                         marginBottom: '16px',
                         backgroundColor: '#fffbe6',
-                        padding: '4px 8px', // Padding más pequeño
-                        fontSize: '12px',   // Tamaño de fuente más pequeño
+                        padding: '4px 8px',
+                        fontSize: '12px',
                     }}
-                    className="small-alert" // Clase adicional para personalización
+                    className="small-alert"
                 />
             </div>
         );
     };
 
     const exportFilteredOrdersToExcel = async () => {
-        const failedOrders = []; // Lista para almacenar los detalles de órdenes fallidas
-        const detailedOrders = []; // Lista para almacenar los detalles exitosos
+        const failedOrders = [];
+        const detailedOrders = [];
 
-        setLoading(true); // Activamos la rueda de carga
+        setLoading(true);
 
         try {
-            // Realizar todas las solicitudes en paralelo
             const responses = await Promise.all(
                 filteredOrders.map(async (order) => {
                     try {
-                        const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${order.id}`);
+                        const response = await axios.get(`http://localhost:8080/api/orders/${order.id}`);
                         
                         const { order: orderDetails, items, userData: { city, phone, address } } = response.data;
-                        // Crear filas por cada ítem y variación
                         items.forEach((item) => {
                             detailedOrders.push({
                                 "ID de Orden": orderDetails.id,
@@ -225,7 +272,6 @@ const Orders = () => {
                             });
                         });
                     } catch (error) {
-                        // Captura el detalle del error para la hoja de errores
                         failedOrders.push({
                             "ID de Orden": order.id,
                             Error: error.response
@@ -236,7 +282,6 @@ const Orders = () => {
                 })
             );
 
-            // Crear hojas de trabajo
             const workbook = XLSX.utils.book_new();
 
             if (detailedOrders.length > 0) {
@@ -253,10 +298,8 @@ const Orders = () => {
                 XLSX.utils.book_append_sheet(workbook, failedWorksheet, "Errores");
             }
 
-            // Guardar el archivo Excel
             XLSX.writeFile(workbook, "Pedidos_Detallados_y_Errores.xlsx");
 
-            // Mensajes al usuario
             if (detailedOrders.length > 0) {
                 message.success("Archivo Excel generado exitosamente.");
             }
@@ -269,26 +312,24 @@ const Orders = () => {
             message.error("Error general al generar el archivo Excel.");
             console.error(error);
         } finally {
-            setLoading(false); // Desactivamos la rueda de carga
+            setLoading(false);
         }
     };
 
     const updateOrderStatus = async (orderId, newStatus) => {
         try {
-            // Cambiamos la URL para incluir directamente el id y el nuevo estado
-            await axios.put(`https://don-kampo-api-5vf3.onrender.com/api/updatestatus/${orderId}/${newStatus}`);
+            await axios.put(`http://localhost:8080/api/updatestatus/${orderId}/${newStatus}`);
             message.success("Estado del pedido actualizado correctamente.");
-            fetchOrders(); // Refresca la lista de pedidos después de actualizar el estado
+            fetchOrders();
         } catch (error) {
             message.error("Error al actualizar el estado del pedido.");
             console.error(error);
         }
     };
 
-    // Eliminar un pedido
     const deleteOrder = async (orderId) => {
         try {
-            await axios.delete(`https://don-kampo-api-5vf3.onrender.com/api/deleteorders/${orderId}`);
+            await axios.delete(`http://localhost:8080/api/deleteorders/${orderId}`);
             message.success("Pedido eliminado correctamente.");
             fetchOrders();
         } catch (error) {
@@ -297,9 +338,19 @@ const Orders = () => {
         }
     };
 
-     const orderColumns = [
-        { title: 'ID de Orden', dataIndex: 'id', key: 'id' },
-        { title: 'Cliente', dataIndex: 'email', key: 'email' },
+    const orderColumns = [
+        { 
+            title: 'ID de Orden', 
+            dataIndex: 'id', 
+            key: 'id',
+            sorter: (a, b) => a.id - b.id,
+        },
+        { 
+            title: 'Cliente', 
+            dataIndex: 'email', 
+            key: 'email',
+            sorter: (a, b) => a.email.localeCompare(b.email),
+        },
         {
             title: 'Fecha',
             dataIndex: 'order_date',
@@ -307,7 +358,12 @@ const Orders = () => {
             render: (date) => new Date(date).toLocaleDateString(),
             sorter: (a, b) => new Date(b.order_date) - new Date(a.order_date),
         },
-        { title: 'Total', dataIndex: 'total', key: 'total' },
+        { 
+            title: 'Total', 
+            dataIndex: 'total', 
+            key: 'total',
+            sorter: (a, b) => parseFloat(a.total.replace('$', '')) - parseFloat(b.total.replace('$', '')),
+        },
         {
             title: 'Estado',
             dataIndex: 'status_id',
@@ -331,10 +387,12 @@ const Orders = () => {
             render: (_, order) => (
                 <div style={{ display: 'flex', gap: '8px' }}>
                     <Select
+                        value={order.status_id}
+                        key={order.status_id}
                         defaultValue={order.status_id}
                         onChange={(newStatus) => updateOrderStatus(order.id, newStatus)}
                         style={{ width: 120 }}
-                        onClick={(e) => e.stopPropagation()} // Evita que el evento burbujee
+                        onClick={(e) => e.stopPropagation()}
                     >
                         <Select.Option value={1}>Pendiente</Select.Option>
                         <Select.Option value={2}>Enviado</Select.Option>
@@ -363,12 +421,21 @@ const Orders = () => {
                 </div>
             ),
         },
-        
     ];
 
     return (
         <Card title="Gestión de Pedidos" style={{ marginTop: '20px' }}>
-            <div style={{ marginBottom: '20px', display: 'flex', gap: '16px' }}>
+            <div style={{ marginBottom: '20px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+                {selectedOrders.length >= 2 && (
+                    <Button 
+                        type="primary" 
+                        onClick={() => setIsBulkModalVisible(true)}
+                        style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
+                    >
+                        Actualizar Ordenes ({selectedOrders.length})
+                    </Button>
+                )}
+                
                 <Select
                     placeholder="Filtrar por estado"
                     allowClear
@@ -391,20 +458,83 @@ const Orders = () => {
                     Descargar Excel
                 </Button>
             </div>
+
+            <Modal
+                title={`Actualizar ${selectedOrders.length} órdenes seleccionadas`}
+                open={isBulkModalVisible}
+                onCancel={() => {
+                    setIsBulkModalVisible(false);
+                    setSelectedStatus(null);
+                }}
+                footer={[
+                    <Button key="cancel" onClick={() => {
+                        setIsBulkModalVisible(false);
+                        setSelectedStatus(null);
+                    }}>
+                        Cancelar
+                    </Button>,
+                    <Button 
+                        key="submit" 
+                        type="primary" 
+                        onClick={handleBulkUpdate}
+                        disabled={!selectedStatus}
+                        loading={loading}
+                    >
+                        Actualizar
+                    </Button>,
+                ]}
+                centered
+                className="modal-blur-backdrop"
+                styles={{
+                    content: {
+                        maxWidth: '500px',
+                        margin: '0 auto',
+                    },
+                    header: {
+                        textAlign: 'center',
+                        borderBottom: '1px solid #f0f0f0',
+                    },
+                    body: {
+                        padding: '20px',
+                    }
+                }}
+            >
+                <Select
+                    placeholder="Seleccionar nuevo estado"
+                    style={{ width: '100%' }}
+                    onChange={(value) => setSelectedStatus(value)}
+                    value={selectedStatus}
+                >
+                    <Select.Option value={1}>Pendiente</Select.Option>
+                    <Select.Option value={2}>Enviado</Select.Option>
+                    <Select.Option value={3}>Entregado</Select.Option>
+                    <Select.Option value={4}>Cancelado</Select.Option>
+                    <Select.Option value={5}>Pagado</Select.Option>
+                </Select>
+            </Modal>
+
             <Spin spinning={loading}>
                 <Table
                     dataSource={filteredOrders}
                     columns={orderColumns}
                     rowKey="id"
                     pagination={{ pageSize: 5 }}
+                    rowSelection={{
+                        type: 'checkbox',
+                        selectedRowKeys: selectedOrders,
+                        onChange: (selectedRowKeys) => {
+                            setSelectedOrders(selectedRowKeys);
+                        },
+                    }}
                     onRow={(record) => ({
                         onClick: () => showModal(record),
                     })}
                 />
             </Spin>
+
             <Modal
                 title="Detalles de la Orden"
-                open={isModalVisible}
+                visible={isModalVisible}
                 onCancel={handleCancel}
                 footer={[
                     <Button key={1} onClick={() => generateOrderPDF(selectedOrder.id)}>
@@ -419,6 +549,7 @@ const Orders = () => {
     );
 };
 
+
 const UpdateOrderPrices = () => {
     const [loading, setLoading] = useState(false);
   
@@ -426,7 +557,7 @@ const UpdateOrderPrices = () => {
       setLoading(true);
   
       try {
-        const response = await axios.put("https://don-kampo-api-5vf3.onrender.com/api/orders/updatePrices");
+        const response = await axios.put("http://localhost:8080/api/orders/updatePrices");
         notification.success({
           message: "Éxito",
           description: response.data.msg || "Los precios se han actualizado correctamente.",

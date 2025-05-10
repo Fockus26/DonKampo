@@ -8,6 +8,33 @@
   margin: 20px auto;
   max-width: 1200px;
 }
+// En tu archivo CSS (Orders.css)
+.modal-blur-backdrop .ant-modal-content {
+  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.modal-blur-backdrop .ant-modal-header {
+  border-radius: 12px 12px 0 0;
+  background: transparent;
+}
+
+.modal-blur-backdrop .ant-modal-body {
+  padding: 24px;
+}
+
+.modal-blur-backdrop .ant-modal-footer {
+  border-radius: 0 0 12px 12px;
+  padding: 16px 24px;
+}
+
+/* Efecto blur para el fondo oscuro */
+.ant-modal-mask {
+  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.25) !important;
+}
 
 .section-title {
   font-size: 24px;

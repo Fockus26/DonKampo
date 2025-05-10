@@ -25,7 +25,7 @@ const SalesReport = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/orders");
+        const response = await axios.get("http://localhost:8080/api/orders");
         setOrders(response.data);
       } catch (error) {
         console.error("Error al obtener los datos de las órdenes:", error);

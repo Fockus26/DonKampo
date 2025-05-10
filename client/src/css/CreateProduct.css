@@ -9,6 +9,42 @@ body {
   line-height: 1.5;
 }
 
+.addPresentation {
+  background-color: #00be48 !important;
+}
+.addPresentation:hover {
+  background-color: #00983a !important;
+  color: white !important;
+}
+
+.presentationTab .ant-tabs-tab {
+  border: 2px solid #ff914d !important;
+}
+.presentationTab .ant-tabs-tab:hover {
+  background-color: #ff914d !important;
+}
+.presentationTab .ant-tabs-tab:hover div {
+  color: white !important;
+}
+
+.presentationTab .ant-tabs-tab div {
+  color: #ff914d !important;
+}
+
+.presentationTab .ant-tabs-tab-active div {
+  color: white !important
+}
+
+.ant-btn-dangerous {
+  background-color: #eb0014 !important;
+  color: white !important;
+  padding: 15px 20px !important;
+}
+
+.ant-btn-dangerous:hover {
+  background-color: #b7000f !important;
+}
+
 /* Contenedor principal del formulario */
 .manage-products-container, .create-product {
   display: grid;
