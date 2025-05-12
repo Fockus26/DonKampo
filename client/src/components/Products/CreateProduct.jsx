@@ -231,7 +231,7 @@ const CreateProduct = () => {
       );
 
       try {
-          const response = await axios.post("http://localhost:8080/api/createproduct", formData, {
+          const response = await axios.post("https://don-kampo-api-5vf3.onrender.com/api/createproduct", formData, {
               headers: { "Content-Type": "multipart/form-data" },
           });
 

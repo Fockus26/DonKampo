@@ -45,7 +45,7 @@ const Orders = () => {
     const fetchOrders = async () => {
         setLoading(true)
         try {
-            const response = await axios.get("http://localhost:8080/api/orders");
+            const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/orders");
 
             const dataOrders = response.data.map(item => {
                 const total = formatPrice(item.items.reduce((acc, item) => acc + item.price * item.quantity, 0))
@@ -66,7 +66,7 @@ const Orders = () => {
     };
 
     const fetchShippingCosts = async () => {
-        const customerTypeResponse = await axios.get("http://localhost:8080/api/customer-types");
+        const customerTypeResponse = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/customer-types");
         const shippingPercentage = getShippingCost(customerTypeResponse.data)
         setShippingPercentage(shippingPercentage);
     }
@@ -103,7 +103,7 @@ const Orders = () => {
         setIsModalVisible(true);
 
         try {
-            const response = await axios.get(`http://localhost:8080/api/orders/${order.id}`);
+            const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${order.id}`);
             setOrderDetails(response.data);
         } catch (error) {
             message.error("Error al cargar los detalles de la orden.");
@@ -130,7 +130,7 @@ const Orders = () => {
 
     try {
         setLoading(true);
-        await axios.put('http://localhost:8080/api/update-bulk-orders', {
+        await axios.put('https://don-kampo-api-5vf3.onrender.com/api/update-bulk-orders', {
             orderIds: selectedOrders,
             newStatus: selectedStatus
         });
@@ -244,7 +244,7 @@ const Orders = () => {
             const responses = await Promise.all(
                 filteredOrders.map(async (order) => {
                     try {
-                        const response = await axios.get(`http://localhost:8080/api/orders/${order.id}`);
+                        const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${order.id}`);
                         
                         const { order: orderDetails, items, userData: { city, phone, address } } = response.data;
                         items.forEach((item) => {
@@ -318,7 +318,7 @@ const Orders = () => {
 
     const updateOrderStatus = async (orderId, newStatus) => {
         try {
-            await axios.put(`http://localhost:8080/api/updatestatus/${orderId}/${newStatus}`);
+            await axios.put(`https://don-kampo-api-5vf3.onrender.com/api/updatestatus/${orderId}/${newStatus}`);
             message.success("Estado del pedido actualizado correctamente.");
             fetchOrders();
         } catch (error) {
@@ -329,7 +329,7 @@ const Orders = () => {
 
     const deleteOrder = async (orderId) => {
         try {
-            await axios.delete(`http://localhost:8080/api/deleteorders/${orderId}`);
+            await axios.delete(`https://don-kampo-api-5vf3.onrender.com/api/deleteorders/${orderId}`);
             message.success("Pedido eliminado correctamente.");
             fetchOrders();
         } catch (error) {
@@ -557,7 +557,7 @@ const UpdateOrderPrices = () => {
       setLoading(true);
   
       try {
-        const response = await axios.put("http://localhost:8080/api/orders/updatePrices");
+        const response = await axios.put("https://don-kampo-api-5vf3.onrender.com/api/orders/updatePrices");
         notification.success({
           message: "Éxito",
           description: response.data.msg || "Los precios se han actualizado correctamente.",

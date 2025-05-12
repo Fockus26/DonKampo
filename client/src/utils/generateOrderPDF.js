@@ -8,7 +8,7 @@ import { jsPDF } from 'jspdf';
 const generateOrderPDF = async orderId => {
     try {
         // Llamar a la API para obtener los detalles de la orden
-        const response = await axios.get(`http://localhost:8080/api/orders/${orderId}`);
+        const response = await axios.get(`https://don-kampo-api-5vf3.onrender.com/api/orders/${orderId}`);
         const { order, userData, items } = response.data;
         const { id, status_id, requires_electronic_billing } = order
         const { user_type, user_name, lastname, email, phone, address, neighborhood, city } = userData

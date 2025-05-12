@@ -24,7 +24,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/login",
+        "https://don-kampo-api-5vf3.onrender.com/api/login",
         { email, user_password },
         { withCredentials: true } // Permite enviar cookies si el backend lo requiere
       );
@@ -54,7 +54,7 @@ const Login = () => {
     setForgotPasswordLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/request-password-reset",
+        "https://don-kampo-api-5vf3.onrender.com/api/request-password-reset",
         {
           email,
         },
@@ -90,7 +90,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/verify-code-and-reset-password",
+        "https://don-kampo-api-5vf3.onrender.com/api/verify-code-and-reset-password",
         {
           email,
           code,

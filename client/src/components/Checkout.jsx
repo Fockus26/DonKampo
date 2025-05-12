@@ -78,7 +78,7 @@ const Checkout = () => {
             const [productId] = key.split('-');
 
             const response = await axios.get(
-              `http://localhost:8080/api/getproduct/${productId}`
+              `https://don-kampo-api-5vf3.onrender.com/api/getproduct/${productId}`
             );
 
             return {
@@ -141,7 +141,7 @@ const Checkout = () => {
         };
 
         await axios.put(
-          `http://localhost:8080/api/updateusers/${userData.id}`,
+          `https://don-kampo-api-5vf3.onrender.com/api/updateusers/${userData.id}`,
           updatedData
         );
         message.success("Datos actualizados exitosamente.");
@@ -153,7 +153,7 @@ const Checkout = () => {
     }
   };
 
-  const validateForm = () => {
+const validateForm = () => {
     const requiredFields = [
       "user_name",
       "lastname",
@@ -219,7 +219,7 @@ const Checkout = () => {
 
         try {
           const response = await axios.post(
-            "http://localhost:8080/api/orders/placeOrder",
+            "https://don-kampo-api-5vf3.onrender.com/api/orders/placeOrder",
             orderData
           );
           if (response.status === 201) {
@@ -235,9 +235,7 @@ const Checkout = () => {
       } else {
         message.error("Acepta los terminos y condiciones.");
       }
-    } else {
-      message.error("Por favor, complete todos los campos antes de realizar el pedido.");
-    }
+    } else message.error("Completa tus datos de usuario y confirma esos datos para continuar");
   };  
 
   const finishOrder = msg => {
@@ -379,6 +377,13 @@ const Checkout = () => {
               layout="vertical"
               className="checkout-form"
               onFinish={handleUpdateUser} // Enviar los datos actualizados al hacer submit
+              onValuesChange={(changedValues, allValues) => {
+                // Actualiza actualUser con los nuevos valores del formulario
+                setActualUser(prev => ({
+                  ...prev,
+                  ...allValues
+                }));
+              }}
             >
               <Row gutter={16}>
                 <Col xs={24} sm={userType === 'home' ? 12 : 24}>

@@ -85,7 +85,7 @@ const ManageData = () => {
   
   const deleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/deleteproduct/${productId.toLocaleString()}`);
+      await axios.delete(`https://don-kampo-api-5vf3.onrender.com/api/deleteproduct/${productId.toLocaleString()}`);
       fetchProducts({ success: "Producto eliminado correctamente.", error: "Error al eliminar el producto." });
     } catch (error) {
       console.error(error);
@@ -162,7 +162,7 @@ const ManageData = () => {
         
         // Envía la solicitud al servidor
         await axios.put(
-          `http://localhost:8080/api/updateproduct/${selectedProduct.product_id}`,
+          `https://don-kampo-api-5vf3.onrender.com/api/updateproduct/${selectedProduct.product_id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -185,7 +185,7 @@ const ManageData = () => {
 
     try {
       await axios.put(
-        `http://localhost:8080/api/updateproduct/${updatedProduct.product_id}`,
+        `https://don-kampo-api-5vf3.onrender.com/api/updateproduct/${updatedProduct.product_id}`,
         updatedProduct
       );
       setIsModalVisible(false);
@@ -197,7 +197,7 @@ const ManageData = () => {
 
   const generateExcelFromProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/products", {
+      const response = await axios.get("https://don-kampo-api-5vf3.onrender.com/api/products", {
         withCredentials: true,
       });
 
